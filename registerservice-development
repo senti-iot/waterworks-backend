@@ -1,0 +1,32 @@
+#!/bin/bash
+
+clear
+
+service_name=waterworks-backend-dev.service
+service_dir=/etc/systemd/system
+server_dir=/srv/nodejs/senti/services/waterworks-backend/development
+
+service=$service_dir/$service_name
+
+echo Registering waterworks-backend service for development ...
+
+
+if [ ! -e "$service" ]; then
+	echo
+    echo "waterworks-backend service is not installed"
+	echo "Installing waterworks-backend service ..."
+	sudo cp $server_dir/$service_name $service_dir/$service_name
+	echo "Enabling $service ..."
+	sudo systemctl enable $service_name
+	sudo systemctl daemon-reload
+	echo "Starting $service ..."
+	sudo systemctl start $service_name
+else 
+    echo "waterworks-backend service is already installed"
+	echo "Enabling $service ..."
+	sudo systemctl enable $service_name
+	sudo systemctl daemon-reload
+	echo "Starting $service ..."
+	sudo systemctl stop $service_name
+	sudo systemctl start $service_name
+fi 
