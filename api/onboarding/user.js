@@ -8,8 +8,8 @@ router.post('/onboarding/user', async (req, res) => {
 	// let rs = await mysqlConn.query(select, [req.params.organisationident, req.params.installationnumber, req.params.deviceident, 0])
 	// console.log(rs[0])
 	console.log(req.body)
-	
-	res.status(200).json(req.params);
+
+	res.status(200).json(true);
 });
 
 module.exports = router

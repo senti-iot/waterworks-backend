@@ -15,7 +15,7 @@ router.get('/onboarding/installation/:organisationident/:installationnumber/:dev
 					lastName,
 					email,
 					adults,
-					chrildren 
+					children 
 				FROM installations I 
 				WHERE I.orgIdent = ? 
 					AND I.installationId = ? 

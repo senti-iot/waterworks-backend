@@ -9,7 +9,7 @@ class InstallationInfo extends sentiData {
 	lastName
 	email
 	adults
-	chrildren
+	children
 
 	constructor(data = null, vars = null) {
 		super()
