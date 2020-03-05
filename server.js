@@ -41,12 +41,12 @@ const startServer = () => {
 
 startServer()
 
-const mysqlConn = require('./mysql/mysql_handler')
+// const mysqlConn = require('./mysql/mysql_handler')
 
-async function testsql() {
-	let select = `SELECT * FROM test`
-	let rs = await mysqlConn.query(select, [])
-	console.log(rs[0])
-}
+// async function testsql() {
+// 	let select = `SELECT * FROM test`
+// 	let rs = await mysqlConn.query(select, [])
+// 	console.log(rs[0])
+// }
 
-testsql()
+// testsql()

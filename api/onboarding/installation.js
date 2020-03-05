@@ -16,11 +16,8 @@ router.get('/onboarding/installation/:organisationident/:installationnumber/:dev
 		res.status(400).json()
 		return
 	}
-
-	let a = new InstallationInfo(rs[0][0])
-	console.log(a)
-
-	res.status(200).json(req.params);
+	let result = new InstallationInfo(rs[0][0])
+	res.status(200).json(result);
 });
 
 module.exports = router
