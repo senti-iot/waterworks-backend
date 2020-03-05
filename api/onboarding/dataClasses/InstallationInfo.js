@@ -2,6 +2,7 @@ const { sentiData } = require('senti-apicore')
 
 class InstallationInfo extends sentiData {
 	orgUUID = null
+	roleUUID = null
 	orgIdent = null
 	installationId = null
 	deviceIdent = null

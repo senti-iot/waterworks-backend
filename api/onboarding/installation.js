@@ -31,6 +31,8 @@ router.get('/onboarding/installation/:organisationident/:installationnumber/:dev
 		return
 	}
 	let result = new InstallationInfo(rs[0][0])
+	result.roleUUID = process.env.WATERWORKSROLE
+	
 	res.status(200).json(result);
 });
 
