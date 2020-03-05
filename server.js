@@ -1,5 +1,5 @@
 #!/usr/bin/env nodejs
-process.title = "senti_gateway"
+process.title = "waterworks-backend"
 const dotenv = require('dotenv').config()
 if (dotenv.error) {
 	console.warn(dotenv.error)
@@ -11,7 +11,7 @@ const app = express()
 
 // API endpoint imports
 
-const port = process.env.NODE_PORT || 3007
+const port = process.env.NODE_PORT || 3029
 
 app.use(helmet())
 app.use(express.json())
