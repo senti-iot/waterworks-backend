@@ -10,6 +10,7 @@ const helmet = require('helmet')
 const app = express()
 
 // API endpoint imports
+const test = require('./api/index')
 
 const port = process.env.NODE_PORT || 3029
 
@@ -19,6 +20,8 @@ app.use(express.urlencoded({ extended: true }))
 
 app.use(cors())
 
+//---API---------------------------------------
+app.use([test])
 
 //---Start the express server---------------------------------------------------
 
@@ -35,3 +38,13 @@ const startServer = () => {
 }
 
 startServer()
+
+const mysqlConn = require('./mysql/mysql_handler')
+
+async function testsql() {
+	let select = `SELECT * FROM test`
+	let rs = await mysqlConn.query(select, [])
+	console.log(rs[0])
+}
+
+testsql()
