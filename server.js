@@ -11,6 +11,7 @@ const app = express()
 
 // API endpoint imports
 const test = require('./api/index')
+const inistalInstallation = require('./api/onboarding/installation')
 
 const port = process.env.NODE_PORT || 3029
 
@@ -22,6 +23,7 @@ app.use(cors())
 
 //---API---------------------------------------
 app.use([test])
+app.use([inistalInstallation])
 
 //---Start the express server---------------------------------------------------
 
