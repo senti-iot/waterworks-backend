@@ -7,10 +7,11 @@ const mysqlConn = require('../../mysql/mysql_handler')
 
 router.post('/onboarding/user', async (req, res) => {
 	if (authClient.getStoredToken() === false) {
-		authClient.storeToken((await authClient.login(process.env.SENTIUSER, process.env.SENTIPASS)).token)
+		let login = await authClient.login(process.env.SENTIUSER, process.env.SENTIPASS)
+		authClient.setStoredToken(login.token)
 	}
 	if (await authClient.getTokenLease(authClient.getStoredToken()) === false) {
-		authClient.storeToken((await authClient.login(process.env.SENTIUSER, process.env.SENTIPASS)).token)
+		authClient.setStoredToken((await authClient.login(process.env.SENTIUSER, process.env.SENTIPASS)).token)
 	}
 	authClient.api.setHeader('Authorization', 'Bearer ' + authClient.getStoredToken())
 
