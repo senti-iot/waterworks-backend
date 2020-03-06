@@ -38,9 +38,8 @@
 		"find-config": "^1.0.0",
 		"helmet": "^3.21.2",
 		"moment": "^2.22.2",
-		"mqtt": "^3.0.0",
 		"mysql2": "^2.1.0",
-		"senti-apicore": "0.0.33"
+		"senti-apicore": "0.0.39"
 	},
 	"devDependencies": {
 		"eslint": "^6.7.2",

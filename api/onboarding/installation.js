@@ -7,6 +7,7 @@ const mysqlConn = require('../../mysql/mysql_handler')
 
 router.get('/onboarding/installation/:organisationident/:installationnumber/:deviceident', async (req, res) => {
 	let select = `SELECT 
+					uuid,
 					orgUUID,
 					orgIdent,
 					installationId,

@@ -9,6 +9,11 @@ const cors = require('cors')
 const helmet = require('helmet')
 const app = express()
 
+
+const sentiAuthClient = require('senti-apicore').sentiAuthClient
+const authClient = new sentiAuthClient(process.env.SENTIURL, process.env.PASSWORDSALT)
+module.exports.authClient = authClient
+
 // API endpoint imports
 const test = require('./api/index')
 const onboardingInstallation = require('./api/onboarding/installation')
