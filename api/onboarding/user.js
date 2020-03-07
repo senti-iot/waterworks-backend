@@ -58,7 +58,7 @@ router.post('/onboarding/user/:installationuuid', async (req, res) => {
 	console.log(addDevicePost.ok)
 
 	let update = `UPTDATE installations I SET I.state = ? WHERE I.uuid = ?`
-	let rsUpdate = await mysqlConn.query(update, [req.params.installationuuid, 1])
+	let rsUpdate = await mysqlConn.query(update, [1, req.params.installationuuid])
 
 	res.status(200).json(true);
 });
