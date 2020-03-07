@@ -46,23 +46,19 @@ router.post('/onboarding/user/:installationuuid', async (req, res) => {
 	console.log(req.body)
 	let userPost = await coreAPI.post('/v2/entity/user', req.body)
 	if(userPost.ok === false) {
-		console.log(userPost)
 		res.status(userPost.status).json()
 		return
 	}
-	console.log(userPost.data)
-	let deviceGet = await dataBrokerAPI.get(`/v2/waterworks/organisation/${installation.orgUUID}/device/${installation.deviceIdent}`)
+	let deviceGet = await dataBrokerAPI.get('/v2/waterworks/organisation/' + installation.orgUUID + '/device/' + installation.deviceIdent)
 	if(deviceGet.ok === false) {
-		console.log(deviceGet)
 		res.status(deviceGet.status).json()
 		return
 	}
-	console.log(deviceGet.data)
 	let addDevicePost = await dataBrokerAPI.post(`/v2/waterworks/adddevice/${deviceGet.data.uuid}/touser/${userPost.data.uuid}`)
 	console.log(addDevicePost.ok)
 
 	let update = `UPTDATE installations I SET I.state = ? WHERE I.uuid = ?`
-	let rsUpdate = await mysqlConn.query(select, [req.params.installationuuid, 1])
+	let rsUpdate = await mysqlConn.query(update, [req.params.installationuuid, 1])
 
 	res.status(200).json(true);
 });

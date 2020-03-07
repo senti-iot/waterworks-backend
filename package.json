@@ -39,7 +39,7 @@
 		"helmet": "^3.21.2",
 		"moment": "^2.22.2",
 		"mysql2": "^2.1.0",
-		"senti-apicore": "0.0.39"
+		"senti-apicore": "0.0.41"
 	},
 	"devDependencies": {
 		"eslint": "^6.7.2",
