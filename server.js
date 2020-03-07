@@ -11,7 +11,7 @@ const app = express()
 
 
 const sentiAuthClient = require('senti-apicore').sentiAuthClient
-const authClient = new sentiAuthClient(process.env.SENTIURL, process.env.PASSWORDSALT)
+const authClient = new sentiAuthClient(process.env.SENTICOREURL, process.env.PASSWORDSALT)
 module.exports.authClient = authClient
 
 // API endpoint imports
