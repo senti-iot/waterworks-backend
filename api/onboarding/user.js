@@ -46,12 +46,14 @@ router.post('/onboarding/user/:installationuuid', async (req, res) => {
 	console.log(req.body)
 	let userPost = await coreAPI.post('/v2/entity/user', req.body)
 	if(userPost.ok === false) {
+		console.log(userPost)
 		res.status(userPost.status).json()
 		return
 	}
 	console.log(userPost.data)
 	let deviceGet = await dataBrokerAPI.get(`/v2/waterworks/organisation/${installation.orgUUID}/device/${installation.deviceIdent}`)
 	if(deviceGet.ok === false) {
+		console.log(deviceGet)
 		res.status(deviceGet.status).json()
 		return
 	}
