@@ -40,9 +40,13 @@ router.post('/onboarding/user/:installationuuid', async (req, res) => {
 	if (await authClient.getTokenLease(authClient.getStoredToken()) === false) {
 		authClient.setStoredToken((await authClient.login(process.env.SENTIUSER, process.env.SENTIPASS)).token)
 	}
-	console.log(req.headers)
 	coreAPI.setHeader('Authorization', 'Bearer ' + authClient.getStoredToken())
 	dataBrokerAPI.setHeader('Authorization', 'Bearer ' + authClient.getStoredToken())
+	if (req.headers['wlhost']) {
+		console.log('SET WLHOST', req.headers['wlhost'])
+		coreAPI.setHeader('wlhost', req.headers['wlhost'])
+		dataBrokerAPI.setHeader('wlhost', req.headers['wlhost'])
+	}
 
 	console.log(req.body)
 	let userPost = await coreAPI.post('/v2/entity/user', req.body)
