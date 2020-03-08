@@ -40,6 +40,7 @@ router.post('/onboarding/user/:installationuuid', async (req, res) => {
 	if (await authClient.getTokenLease(authClient.getStoredToken()) === false) {
 		authClient.setStoredToken((await authClient.login(process.env.SENTIUSER, process.env.SENTIPASS)).token)
 	}
+	console.log(req.headers)
 	coreAPI.setHeader('Authorization', 'Bearer ' + authClient.getStoredToken())
 	dataBrokerAPI.setHeader('Authorization', 'Bearer ' + authClient.getStoredToken())
 
@@ -49,16 +50,22 @@ router.post('/onboarding/user/:installationuuid', async (req, res) => {
 		res.status(userPost.status).json()
 		return
 	}
+	if (req.body.internal) {
+		let userInternalPost = await coreAPI.put('/v2/entity/user/' + userPost.data.uuid + '/internal', req.body.internal)
+		if(userInternalPost.ok === false) {
+			res.status(userInternalPost.status).json()
+			return
+		}
+	}
 	let deviceGet = await dataBrokerAPI.get('/v2/waterworks/organisation/' + installation.orgUUID + '/device/' + installation.deviceIdent)
 	if(deviceGet.ok === false) {
 		res.status(deviceGet.status).json()
 		return
 	}
 	let addDevicePost = await dataBrokerAPI.post(`/v2/waterworks/adddevice/${deviceGet.data.uuid}/touser/${userPost.data.uuid}`)
-	console.log(addDevicePost.ok)
 
-	let update = `UPTDATE installations I SET I.state = ? WHERE I.uuid = ?`
-	let rsUpdate = await mysqlConn.query(update, [1, req.params.installationuuid])
+	let update = `UPDATE installations I SET I.state = ? WHERE I.uuid = ?`
+	let rsUpdate = await mysqlConn.query(update, [1, installation.uuid])
 
 	res.status(200).json(true);
 });
