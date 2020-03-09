@@ -8,9 +8,9 @@ router.get('/settings/price/:organisationident', async (req, res) => {
 						(watercost + watertax + statetax) as waterPrice, 
 						((watercost + watertax + statetax)*vat)/100 as waterVat,
 						(sewage*vat)/100 as sewageVat,
-						round((watercost + watertax + statetax) + ((watercost + watertax + statetax)*vat)/100, 2) as waterTotal,
-						round(sewage + (sewage*vat)/100, 2) as sewageTotal	,
-						round((watercost + watertax + statetax + sewage) + ((watercost + watertax + statetax + sewage)*vat)/100, 2) as total
+						(watercost + watertax + statetax) + ((watercost + watertax + statetax)*vat)/100 as waterTotal,
+						sewage + (sewage*vat)/100 as sewageTotal	,
+						(watercost + watertax + statetax + sewage) + ((watercost + watertax + statetax + sewage)*vat)/100 as total
 					FROM installationSettings i
 					WHERE i.orgUUID = ?`
 	let rs = await mysqlConn.query(select, [req.params.organisationident])
