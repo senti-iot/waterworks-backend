@@ -18,7 +18,10 @@ const coreAPI = createAPI({
 		'User-Agent': 'Senti.io v2'
 	}
 })
+const { sentiAclPriviledge, sentiAclResourceType } = require('senti-apicore')
+
 const authClient = require('../../server').authClient
+const aclClient = require('../../server').aclClient
 
 const mysqlConn = require('../../mysql/mysql_handler')
 const InstallationInfo = require('./dataClasses/InstallationInfo')
@@ -56,8 +59,17 @@ router.get('/onboarding/userfix/:uuid', async (req, res) => {
 			return
 		}
 		console.log(internalPost.data.internal)
-		users.push(internalPost.data)
+		if (internalPost.data.internal && internalPost.data.internal.sentiWaterworks) {
+			let resources = await aclClient.findResources(user.uuid, '00000000-0000-0000-0000-000000000000', sentiAclResourceType.device, sentiAclPriviledge.device.read)
+			if (resources.length === 0) {
+				res.status(404).json([])
+				return
+			}
+			let deviceUUIDs = (resources.length > 0) ? resources.map(item => { return item.uuid }) : []
+			console.log(deviceUUIDs)
 		
+			users.push(internalPost.data)
+		}
 	}, Promise.resolve());
 
 
