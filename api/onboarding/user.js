@@ -67,6 +67,12 @@ router.get('/onboarding/userfix/:uuid', async (req, res) => {
 			}
 			let deviceUUIDs = (resources.length > 0) ? resources.map(item => { return item.uuid }) : []
 			internalPost.data.internal.sentiWaterworks.devices = deviceUUIDs
+
+			let userInternalPost = await coreAPI.put('/v2/entity/user/' + user.uuid + '/internal', internalPost.data.internal)
+			if(userInternalPost.ok === false) {
+				console.log('error on ', internalPost.data)
+			}
+	
 			users.push(internalPost.data)
 		}
 	}, Promise.resolve());
