@@ -66,8 +66,7 @@ router.get('/onboarding/userfix/:uuid', async (req, res) => {
 				return
 			}
 			let deviceUUIDs = (resources.length > 0) ? resources.map(item => { return item.uuid }) : []
-			console.log(deviceUUIDs)
-		
+			internalPost.data.internal.sentiWaterworks.devices = deviceUUIDs
 			users.push(internalPost.data)
 		}
 	}, Promise.resolve());
