@@ -26,6 +26,7 @@ const test = require('./api/index')
 const onboardingInstallation = require('./api/onboarding/installation')
 const onboardingUser = require('./api/onboarding/user')
 const settingsPrice = require('./api/settings/price')
+const settingsGlobals = require('./api/settings/globals')
 
 const port = process.env.NODE_PORT || 3029
 
@@ -38,7 +39,7 @@ app.use(cors())
 //---API---------------------------------------
 app.use([test])
 app.use([onboardingInstallation, onboardingUser])
-app.use([settingsPrice])
+app.use([settingsPrice, settingsGlobals])
 
 //---Start the express server---------------------------------------------------
 
@@ -55,13 +56,3 @@ const startServer = () => {
 }
 
 startServer()
-
-// const mysqlConn = require('./mysql/mysql_handler')
-
-// async function testsql() {
-// 	let select = `SELECT * FROM test`
-// 	let rs = await mysqlConn.query(select, [])
-// 	console.log(rs[0])
-// }
-
-// testsql()
