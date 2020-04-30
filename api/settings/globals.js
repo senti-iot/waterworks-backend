@@ -7,7 +7,8 @@ router.get('/settings/globals/:countrycode', async (req, res) => {
 	let select = `SELECT countryCode, benchmark, goal 
 				FROM globalSettings 
 				WHERE countryCode = ?;`
-	let rs = await mysqlConn.query(select, [req.params.countrycode])
+	
+	let rs = await mysqlConn.query(select, [req.params.countrycode.toUpperCase()])
 	if (rs[0].length === 0) {
 		res.status(404).json()
 		return
