@@ -12,6 +12,7 @@ router.get('/onboarding/installation/:organisationident/:installationnumber/:dev
 					orgIdent,
 					installationId,
 					deviceIdent,
+					deviceUuname,
 					firstName,
 					lastName,
 					email,

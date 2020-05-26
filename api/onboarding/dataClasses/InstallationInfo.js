@@ -7,6 +7,7 @@ class InstallationInfo extends sentiData {
 	orgIdent = null
 	installationId = null
 	deviceIdent = null
+	deviceUuname = null
 	firstName
 	lastName
 	email

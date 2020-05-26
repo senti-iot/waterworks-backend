@@ -80,7 +80,20 @@ const InstallationInfo = require('./dataClasses/InstallationInfo')
 // })
 router.post('/onboarding/user/:installationuuid', async (req, res) => {
 	// Check installation
-	let select = `SELECT * FROM installations I WHERE I.uuid = ? AND I.state = ?`
+	let select = `SELECT uuid,
+						orgUUID,
+						orgIdent,
+						installationId,
+						deviceIdent,
+						deviceUuname,
+						firstName,
+						lastName,
+						email,
+						adults,
+						children 
+					FROM installations I 
+					WHERE I.uuid = ? 
+						AND I.state = ?`
 	let rs = await mysqlConn.query(select, [req.params.installationuuid, 0])
 	if (rs[0].length !== 1) {
 		res.status(404).json()
@@ -109,7 +122,7 @@ router.post('/onboarding/user/:installationuuid', async (req, res) => {
 		res.status(userPost.status).json()
 		return
 	}
-	let deviceGet = await dataBrokerAPI.get('/v2/waterworks/organisation/' + installation.orgUUID + '/device/' + installation.deviceIdent)
+	let deviceGet = await dataBrokerAPI.get('/v2/waterworks/organisation/' + installation.orgUUID + '/device/' + installation.deviceUuname)
 	if(deviceGet.ok === false) {
 		res.status(deviceGet.status).json()
 		return
