@@ -13,6 +13,7 @@ const cors = require('cors')
 const helmet = require('helmet')
 const app = express()
 
+const mysqlConn = require('./mysql/mysql_handler')
 
 const sentiAuthClient = require('senti-apicore').sentiAuthClient
 const authClient = new sentiAuthClient(process.env.SENTICOREURL, process.env.PASSWORDSALT)
@@ -71,6 +72,11 @@ const dataBrokerAPI = createAPI({
 })
 
 async function submitAlarmThreshold() {
+	let select = `SELECT i.orgUUID as uuid FROM installationSettings i`
+	let rs = await mysqlConn.query(select, [])
+	if (rs[0].length === 0) {
+		return
+	}
 	if (authClient.getStoredToken() === false) {
 		let login = await authClient.login(process.env.SENTIUSER, process.env.SENTIPASS)
 		authClient.setStoredToken(login.token)
@@ -79,11 +85,12 @@ async function submitAlarmThreshold() {
 		authClient.setStoredToken((await authClient.login(process.env.SENTIUSER, process.env.SENTIPASS)).token)
 	}
 	dataBrokerAPI.setHeader('Authorization', 'Bearer ' + authClient.getStoredToken())
-	console.log('SET WLHOST', process.env.WLHOST)
 	dataBrokerAPI.setHeader('wlhost', process.env.WLHOST)
 
-	let deviceGet = await dataBrokerAPI.get('/v2/waterworks/alarm/threshold/489043f8-16ef-4b56-8f66-0b0bfa55e0d4')
-	console.log(deviceGet.ok, deviceGet.data)
+	rs[0].map(async org => {
+		let deviceGet = await dataBrokerAPI.get(`/v2/waterworks/alarm/threshold/${org.uuid}`)
+		console.log(org.uuid, deviceGet.ok)
+	})
 }
 
 const job = new CronJob('*/60 * * * *', async function() {
