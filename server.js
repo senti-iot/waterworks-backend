@@ -70,10 +70,7 @@ const dataBrokerAPI = createAPI({
 	}
 })
 
-const job = new CronJob('*/60 * * * *', async function() {
-	const d = new Date();
-	console.log(d);
-	
+async function submitAlarmThreshold() {
 	if (authClient.getStoredToken() === false) {
 		let login = await authClient.login(process.env.SENTIUSER, process.env.SENTIPASS)
 		authClient.setStoredToken(login.token)
@@ -87,6 +84,12 @@ const job = new CronJob('*/60 * * * *', async function() {
 
 	let deviceGet = await dataBrokerAPI.get('/v2/waterworks/alarm/threshold/489043f8-16ef-4b56-8f66-0b0bfa55e0d4')
 	console.log(deviceGet.ok, deviceGet.data)
-});
-job.start();
+}
 
+const job = new CronJob('*/60 * * * *', async function() {
+	const d = new Date()
+	console.log(d)
+	submitAlarmThreshold()
+})
+job.start()
+submitAlarmThreshold()
