@@ -70,7 +70,7 @@ const dataBrokerAPI = createAPI({
 	}
 })
 
-const job = new CronJob('*/10 * * * * *', async function() {
+const job = new CronJob('*/60 * * * *', async function() {
 	const d = new Date();
 	console.log(d);
 	
