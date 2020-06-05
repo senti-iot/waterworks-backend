@@ -4,6 +4,10 @@ const dotenv = require('dotenv').config()
 if (dotenv.error) {
 	console.warn(dotenv.error)
 }
+
+const createAPI = require('apisauce').create
+const CronJob = require('cron').CronJob
+
 const express = require('express')
 const cors = require('cors')
 const helmet = require('helmet')
@@ -56,3 +60,33 @@ const startServer = () => {
 }
 
 startServer()
+
+const dataBrokerAPI = createAPI({
+	baseURL: process.env.SENTIDATABROKER,
+	headers: { 
+		'Accept': 'application/json', 
+		'Content-Type': 'application/json',
+		'User-Agent': 'Senti.io v2'
+	}
+})
+
+const job = new CronJob('*/10 * * * * *', async function() {
+	const d = new Date();
+	console.log(d);
+	
+	if (authClient.getStoredToken() === false) {
+		let login = await authClient.login(process.env.SENTIUSER, process.env.SENTIPASS)
+		authClient.setStoredToken(login.token)
+	}
+	if (await authClient.getTokenLease(authClient.getStoredToken()) === false) {
+		authClient.setStoredToken((await authClient.login(process.env.SENTIUSER, process.env.SENTIPASS)).token)
+	}
+	dataBrokerAPI.setHeader('Authorization', 'Bearer ' + authClient.getStoredToken())
+	console.log('SET WLHOST', process.env.WLHOST)
+	dataBrokerAPI.setHeader('wlhost', process.env.WLHOST)
+
+	let deviceGet = await dataBrokerAPI.get('/v2/waterworks/alarm/threshold/489043f8-16ef-4b56-8f66-0b0bfa55e0d4')
+	console.log(deviceGet.ok, deviceGet.data)
+});
+job.start();
+
