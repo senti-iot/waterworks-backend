@@ -4,7 +4,9 @@
 	"deprecated": false,
 	"description": "Waterworks backend service",
 	"main": "server.js",
-	"scripts": {},
+	"scripts": {
+		"test": "echo \"No Tests\""
+	},
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/senti-iot/waterworks-backend.git"
