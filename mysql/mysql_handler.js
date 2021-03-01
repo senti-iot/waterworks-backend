@@ -15,4 +15,3 @@ let connection = mysql.createPool({
 })
 connection = connection.promise()
 module.exports = connection
-// ændring
