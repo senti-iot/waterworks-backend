@@ -26,13 +26,33 @@ const aclBackend = new sentiAclBackend(process.env.ACLBACKENDTURL)
 const aclClient = new sentiAclClient(aclBackend)
 module.exports.aclClient = aclClient
 
-// API endpoint imports
+/**
+ *  API endpoint imports
+ * */
 const test = require('./api/index')
 const onboardingInstallation = require('./api/onboarding/installation')
 const onboardingUser = require('./api/onboarding/user')
 const settingsPrice = require('./api/settings/price')
 const settingsGlobals = require('./api/settings/globals')
+/**
+ * V3
+ */
+//--- Auth ---
+const auth = require('./api/auth')
+//--- Instalations ---
+const installation = require('./api/installations/installation')
+const installationDevices = require('./api/installations/installationDevices')
+const installationUsers = require('./api/installations/installationUsers')
+const installations = require('./api/installations/installations')
+//--- Data Series ---
+const benchmark = require('./api/dataSeries/benchmark')
+const reading = require('./api/dataSeries/reading')
+const totalUsageByDay = require('./api/dataSeries/totalUsageByDay')
+const totalUsageByHour = require('./api/dataSeries/totalUsageByHour')
+const usageByDay = require('./api/dataSeries/usageByDay')
+const usageByHour = require('./api/dataSeries/usageByHour')
 
+//--- App Port ---
 const port = process.env.NODE_PORT || 3029
 
 app.use(helmet())
@@ -42,13 +62,19 @@ app.use(express.urlencoded({ extended: true }))
 app.use(cors())
 
 //---API---------------------------------------
+app.use([auth])
+app.use([installation, installationDevices, installationUsers, installations,
+	benchmark, reading, totalUsageByDay, totalUsageByHour, usageByDay, usageByHour
+])
 app.use([test])
 app.use([onboardingInstallation, onboardingUser])
 app.use([settingsPrice, settingsGlobals])
 
 //---Start the express server---------------------------------------------------
+var allRoutes = require('./lib/routeLogger')
 
 const startServer = () => {
+	allRoutes(app)
 	app.listen(port, () => {
 		console.log('Senti Service started on port', port)
 	}).on('error', (err) => {
@@ -64,8 +90,8 @@ startServer()
 
 const dataBrokerAPI = createAPI({
 	baseURL: process.env.SENTIDATABROKER,
-	headers: { 
-		'Accept': 'application/json', 
+	headers: {
+		'Accept': 'application/json',
 		'Content-Type': 'application/json',
 		'User-Agent': 'Senti.io v2'
 	}

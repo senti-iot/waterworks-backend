@@ -33,7 +33,8 @@
 	},
 	"homepage": "https://github.com/senti-iot/waterworks-backend#readme",
 	"dependencies": {
-		"apisauce": "^1.1.1",
+		"apisauce": "^2.0.1",
+		"cli-table3": "^0.6.0",
 		"cors": "^2.8.5",
 		"cron": "^1.8.2",
 		"dotenv": "^8.2.0",
@@ -42,7 +43,7 @@
 		"helmet": "^3.21.2",
 		"moment": "^2.22.2",
 		"mysql2": "^2.1.0",
-		"senti-apicore": "0.0.49"
+		"senti-apicore": "0.0.55"
 	},
 	"devDependencies": {
 		"eslint": "^6.7.2",
