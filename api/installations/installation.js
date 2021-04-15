@@ -1,14 +1,20 @@
 const express = require('express')
 const router = express.Router()
+const sentiInstallationService = require('../../lib/installationService')
+const instService = new sentiInstallationService()
 
 /**
  * Get Installation
  * @param {UUIDv4} req.params.uuid
  */
-router.get('v3/installation/:uuid', (req, res) => {
+router.get('/v3/installation/:uuid', async (req, res) => {
 	let installationUUID = req.params.uuid
-
-	res.status(200);
+	let inst = await instService.getInstallationByUUID(installationUUID)
+	if (inst)
+		res.status(200).json(inst)
+	else {
+		res.status(404).json(null)
+	}
 })
 
 /**
@@ -16,11 +22,11 @@ router.get('v3/installation/:uuid', (req, res) => {
  * @param {UUIDv4} req.params.uuid
  * @param {Object} req.body - Installation object
  */
-router.put('v3/installation/:uuid', (req, res) => {
+router.put('/v3/installation', async (req, res) => {
 	let installation = req.body
-	let installationUUID = req.params.uuid
+	let fInst = await instService.createInstallation(installation)
 
-	res.status(200)
+	res.status(200).json(fInst)
 })
 
 /**

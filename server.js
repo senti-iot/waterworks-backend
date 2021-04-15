@@ -5,6 +5,10 @@ if (dotenv.error) {
 	console.warn(dotenv.error)
 }
 
+const iconv = require('iconv-lite')
+const encodings =  require('iconv-lite/encodings')
+iconv.encodings = encodings;
+
 const createAPI = require('apisauce').create
 const CronJob = require('cron').CronJob
 
@@ -62,8 +66,8 @@ app.use(express.urlencoded({ extended: true }))
 app.use(cors())
 
 //---API---------------------------------------
-app.use([auth])
-app.use([installation, installationDevices, installationUsers, installations,
+// app.use([auth])
+app.use([installation, /* installationDevices, installationUsers, */ installations,
 	benchmark, reading, totalUsageByDay, totalUsageByHour, usageByDay, usageByHour
 ])
 app.use([test])
@@ -97,32 +101,35 @@ const dataBrokerAPI = createAPI({
 	}
 })
 
-async function submitAlarmThreshold() {
-	let select = `SELECT i.orgUUID as uuid FROM installationSettings i`
-	let rs = await mysqlConn.query(select, [])
-	if (rs[0].length === 0) {
-		return
-	}
-	if (authClient.getStoredToken() === false) {
-		let login = await authClient.login(process.env.SENTIUSER, process.env.SENTIPASS)
-		authClient.setStoredToken(login.token)
-	}
-	if (await authClient.getTokenLease(authClient.getStoredToken()) === false) {
-		authClient.setStoredToken((await authClient.login(process.env.SENTIUSER, process.env.SENTIPASS)).token)
-	}
-	dataBrokerAPI.setHeader('Authorization', 'Bearer ' + authClient.getStoredToken())
-	dataBrokerAPI.setHeader('wlhost', process.env.WLHOST)
+module.exports = app
+//Move this to a separate Service Mikkel...
 
-	rs[0].map(async org => {
-		let deviceGet = await dataBrokerAPI.get(`/v2/waterworks/alarm/threshold/${org.uuid}`)
-		console.log(org.uuid, deviceGet.ok)
-	})
-}
+// async function submitAlarmThreshold() {
+// 	let select = `SELECT i.orgUUID as uuid FROM installationSettings i`
+// 	let rs = await mysqlConn.query(select, [])
+// 	if (rs[0].length === 0) {
+// 		return
+// 	}
+// 	if (authClient.getStoredToken() === false) {
+// 		let login = await authClient.login(process.env.SENTIUSER, process.env.SENTIPASS)
+// 		authClient.setStoredToken(login.token)
+// 	}
+// 	if (await authClient.getTokenLease(authClient.getStoredToken()) === false) {
+// 		authClient.setStoredToken((await authClient.login(process.env.SENTIUSER, process.env.SENTIPASS)).token)
+// 	}
+// 	dataBrokerAPI.setHeader('Authorization', 'Bearer ' + authClient.getStoredToken())
+// 	dataBrokerAPI.setHeader('wlhost', process.env.WLHOST)
 
-const job = new CronJob('*/60 * * * *', async function() {
-	const d = new Date()
-	console.log(d)
-	submitAlarmThreshold()
-})
-job.start()
-submitAlarmThreshold()
+// 	rs[0].map(async org => {
+// 		let deviceGet = await dataBrokerAPI.get(`/v2/waterworks/alarm/threshold/${org.uuid}`)
+// 		console.log(org.uuid, deviceGet.ok)
+// 	})
+// }
+
+// const job = new CronJob('*/60 * * * *', async function() {
+// 	const d = new Date()
+// 	console.log(d)
+// 	submitAlarmThreshold()
+// })
+// job.start()
+// submitAlarmThreshold()

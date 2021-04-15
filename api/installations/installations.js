@@ -4,9 +4,9 @@ const router = express.Router();
 /**
  * Get all installations
  */
-router.get('v3/installations', (req, res) => {
+router.get('/v3/installations', (req, res) => {
 
-	return res.status(200);
+	res.status(200).json(true);
 })
 
 /**
@@ -14,7 +14,7 @@ router.get('v3/installations', (req, res) => {
  * @param {UUIDv4} req.params.orgUUID
  */
 
-router.get('v3/installations/:orguuid', (req, res) => {
+router.get('/v3/installations/:orguuid', (req, res) => {
 	let orgUUID = req.params.orguuid
 
 	return res.status(200);

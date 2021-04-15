@@ -5,7 +5,7 @@
 	"description": "Waterworks backend service",
 	"main": "server.js",
 	"scripts": {
-		"test": "echo \"No Tests\""
+		"test": "jest --detectOpenHandles --forceExit"
 	},
 	"repository": {
 		"type": "git",
@@ -47,6 +47,8 @@
 	},
 	"devDependencies": {
 		"eslint": "^6.7.2",
-		"eslint-config-google": "^0.14.0"
+		"eslint-config-google": "^0.14.0",
+		"jest": "^26.6.3",
+		"supertest": "^6.1.3"
 	}
 }
