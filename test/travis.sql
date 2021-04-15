@@ -1,3 +1,5 @@
+CREATE DATABASE `waterworksdev` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_danish_ci */;
+
 CREATE TABLE waterworksdev.installation (
 	id INT auto_increment NOT NULL,
 	uuid varchar(36) NOT NULL,
