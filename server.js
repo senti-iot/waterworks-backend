@@ -66,7 +66,7 @@ app.use(express.urlencoded({ extended: true }))
 app.use(cors())
 
 //---API---------------------------------------
-// app.use([auth])
+app.use([auth])
 app.use([installation, /* installationDevices, installationUsers, */ installations,
 	benchmark, reading, totalUsageByDay, totalUsageByHour, usageByDay, usageByHour
 ])

@@ -5,9 +5,10 @@ let instService = null
 
 
 
-router.all('/v3/installation', async (req, res) => {
+router.all('/v3/installation', async (req, res, next) => {
 	instService = new sentiInstallationService(req.headers.authorization)
 	console.log(req.headers.authorization)
+	next()
 })
 /**
  * Get Installation
