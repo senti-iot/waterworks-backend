@@ -25,8 +25,11 @@ router.get('/v3/installation/:uuid', async (req, res) => {
 router.put('/v3/installation', async (req, res) => {
 	let installation = req.body
 	let fInst = await instService.createInstallation(installation)
+	if (fInst) {
 
-	res.status(200).json(fInst)
+		return res.status(200).json(fInst)
+	}
+	return res.status(500).json(fInst)
 })
 
 /**
@@ -34,12 +37,14 @@ router.put('/v3/installation', async (req, res) => {
  * @param {UUIDv4} req.params.uuid
  * @param {Object} req.body - Installation Object
  */
-router.post('v3/installation/:uuid', (req, res) => {
+router.post('/v3/installation', async (req, res) => {
 	let installation = req.body
 	let installationUUID = req.params.uuid
-
-	res.status(200)
-})
+	let fInst = await instService.editInstallation(installation)
+	if (fInst) {
+		return res.status(200).json(fInst)
+	}
+	return res.status(500).json(fInst)})
 
 /**
  * Delete Installation

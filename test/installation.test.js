@@ -2,7 +2,7 @@ const request = require('supertest')
 const app = require('../server')
 require('mysql2/node_modules/iconv-lite').encodingExists('foo');
 
-describe('Get Installation',  () => {
+describe('Installation CRUD',  () => {
 	let instUUID = null
 	it('should create', async () => {
 		const res = await request(app)
@@ -25,6 +25,25 @@ describe('Get Installation',  () => {
 		expect(res.body.address).toEqual('Schubertstr')
 		expect(res.body.uuid).toEqual(instUUID)
 		// expect(res.body).toHaveProperty('get')
+	})
+	it('should edit', async () => {
+		expect(instUUID).not.toBeNull()
+		let editInst = {
+			uuid: instUUID,
+			address: "FakeAddress",
+			orgUUID: "d866eb04-90d4-436c-9cc8-bd593258c54f", //Webhouse ApS UUID
+			state: 0,
+			adults: 2,
+			children: 0
+		}
+		const res = await request(app)
+			.post(`/v3/installation`).type('json').send(editInst)
+		expect(res.statusCode).toEqual(200)
+		expect(res.body.address).toEqual('FakeAddress')
+		expect(res.body.state).toEqual(0)
+		expect(res.body.adults).toEqual(2)
+		expect(res.body.children).toEqual(0)
+		expect(res.body.uuid).toEqual(instUUID)
 	})
 })
 
