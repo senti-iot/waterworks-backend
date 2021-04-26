@@ -1,5 +1,7 @@
 const request = require('supertest')
 const app = require('../server')
+const bearerToken = process.env.BEARER_TOKEN
+console.log(bearerToken)
 require('mysql2/node_modules/iconv-lite').encodingExists('foo');
 
 describe('Installation CRUD',  () => {
@@ -44,6 +46,21 @@ describe('Installation CRUD',  () => {
 		expect(res.body.adults).toEqual(2)
 		expect(res.body.children).toEqual(0)
 		expect(res.body.uuid).toEqual(instUUID)
+	})
+	it('should delete', async () => {
+		expect(instUUID).not.toBeNull()
+		const res = await request(app)
+			.delete(`/v3/installation/${instUUID}`).send()
+		expect(res.statusCode).toEqual(200)
+
+	})
+	it('should not get deleted installation', async () => {
+		expect(instUUID).not.toBeNull()
+		const res = await request(app)
+			.get(`/v3/installation/${instUUID}`).send()
+			console.log(res.statusCode)
+		expect(res.statusCode).not.toEqual(200)
+		// expect(res.body).toHaveProperty('get')
 	})
 })
 
