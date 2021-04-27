@@ -1,5 +1,17 @@
 const express = require('express')
 const router = express.Router()
+const sentiInstDeviceService = require('../../lib/instDeviceService')
+let instDeviceService = null
+
+
+/**
+ * Set the auth bearer Token to serviceClass
+ */
+router.all('/v3/installation', async (req, res, next) => {
+	instDeviceService = new sentiInstDeviceService(req.headers.authorization)
+	console.log(req.headers.authorization)
+	next()
+})
 
 /**
  * Get Installation Devices

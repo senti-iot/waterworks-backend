@@ -8,6 +8,7 @@ CREATE TABLE waterworksdev.installation (
 	state SMALLINT DEFAULT 0 NOT NULL,
 	adults SMALLINT NULL,
 	children SMALLINT NULL,
+	deleted BOOLEAN DEFAULT 0 NOT NULL ,
 	CONSTRAINT `inst_pk` PRIMARY KEY (id)
 )
 ENGINE=InnoDB
@@ -25,6 +26,7 @@ CREATE TABLE waterworksdev.instDevice (
 	endDate DATETIME,
 	deviceUUID varchar(36) NOT NULL,
 	instUUID varchar(36) NOT NULL,
+	deleted BOOLEAN DEFAULT 0 NOT NULL ,
 	CONSTRAINT `instDevice_pk` PRIMARY KEY (id),
 	CONSTRAINT `instDevice_installation_fk` FOREIGN KEY (instUUID) references installation(uuid)
 )
@@ -42,6 +44,7 @@ create table waterworksdev.instUser (
 	endDate DATETIME,
 	userUUID varchar(36) NOT NULL,
 	instUUID varchar(36) NOT NULL,
+	deleted BOOLEAN DEFAULT 0 NOT NULL ,
 	CONSTRAINT `instUser_pk` PRIMARY KEY (id),
 	CONSTRAINT `instUser_installation_fk` FOREIGN KEY (instUUID) references installation(uuid)
 )
