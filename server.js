@@ -67,7 +67,7 @@ app.use(cors())
 
 //---API---------------------------------------
 app.use([auth])
-app.use([installation, installationDevices,/* installationUsers, */ installations,
+app.use([installation, installationDevices, installationUsers,  installations,
 	benchmark, reading, totalUsageByDay, totalUsageByHour, usageByDay, usageByHour
 ])
 app.use([test])
