@@ -17,7 +17,7 @@ router.all('/v3/installation', async (req, res, next) => {
 router.get('/v3/installation/:uuid', async (req, res) => {
 	let installationUUID = req.params.uuid
 	let inst = await instService.getInstallationByUUID(installationUUID)
-	console.log(inst)
+	// console.log(inst)
 	if (inst)
 		res.status(200).json(inst)
 	else {

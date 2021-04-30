@@ -5,13 +5,13 @@ const { authClient } = require('../server')
 router.all('*', async (req, res, next) => {
 
 	let lease = await authClient.getLease(req)
-	console.log(lease)
+	// console.log(lease)
 	let bearerToken = await authClient.parseBearerToken(req)
 	if (lease === false) {
 		res.status(401).json('The lease is expired')
 		return
 	}
-	console.log('Authenticated')
+	// console.log('Authenticated')
 	req.bearer = bearerToken
 	req.lease = lease
 	next()

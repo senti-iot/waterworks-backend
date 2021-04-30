@@ -1,13 +1,11 @@
-const request = require('supertest')
-const app = require('../server')
-const bearerToken = process.env.BEARER_TOKEN
-console.log(bearerToken)
-require('mysql2/node_modules/iconv-lite').encodingExists('foo');
+const vars = require('./vars')
+const agent = vars.agent
+const bearerToken = vars.bearerToken
 
 describe('Installation CRUD',  () => {
 	let instUUID = null
 	it('should create', async () => {
-		const res = await request(app)
+		const res = await agent
 			.put('/v3/installation').type('json')
 			.set('Authorization', `Bearer ${bearerToken}`)
 			.send({
@@ -23,7 +21,7 @@ describe('Installation CRUD',  () => {
 	} )
 	it('should get', async () => {
 		expect(instUUID).not.toBeNull()
-		const res = await request(app)
+		const res = await agent
 			.get(`/v3/installation/${instUUID}`)
 			.set('Authorization', `Bearer ${bearerToken}`)
 			.send()
@@ -42,7 +40,7 @@ describe('Installation CRUD',  () => {
 			adults: 2,
 			children: 0
 		}
-		const res = await request(app)
+		const res = await agent
 			.post(`/v3/installation`)
 			.set('Authorization', `Bearer ${bearerToken}`)
 			.type('json').send(editInst)
@@ -55,7 +53,7 @@ describe('Installation CRUD',  () => {
 	})
 	it('should delete', async () => {
 		expect(instUUID).not.toBeNull()
-		const res = await request(app)
+		const res = await agent
 			.delete(`/v3/installation/${instUUID}`)
 			.set('Authorization', `Bearer ${bearerToken}`)
 			.send()
@@ -64,7 +62,7 @@ describe('Installation CRUD',  () => {
 	})
 	it('should not get deleted installation', async () => {
 		expect(instUUID).not.toBeNull()
-		const res = await request(app)
+		const res = await agent
 			.get(`/v3/installation/${instUUID}`)
 			.set('Authorization', `Bearer ${bearerToken}`)
 			.send()
@@ -75,5 +73,5 @@ describe('Installation CRUD',  () => {
 })
 
 afterAll(async () => {
-	await new Promise(resolve => setTimeout(() => resolve(), 500)) // avoid jest open handle error
+	await new Promise(resolve => setTimeout(() => resolve(), 1000)) // avoid jest open handle error
 });

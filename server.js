@@ -67,7 +67,7 @@ app.use(cors())
 
 //---API---------------------------------------
 app.use([auth])
-app.use([installation, /* installationDevices, installationUsers, */ installations,
+app.use([installation, installationDevices,/* installationUsers, */ installations,
 	benchmark, reading, totalUsageByDay, totalUsageByHour, usageByDay, usageByHour
 ])
 app.use([test])
@@ -78,7 +78,7 @@ app.use([settingsPrice, settingsGlobals])
 var allRoutes = require('./lib/routeLogger')
 
 const startServer = () => {
-	allRoutes(app)
+	// allRoutes(app)
 	app.listen(port, () => {
 		console.log('Senti Service started on port', port)
 	}).on('error', (err) => {
