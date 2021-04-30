@@ -1,12 +1,15 @@
-const express = require('express');
-const router = express.Router();
+const express = require('express')
+const router = express.Router()
+const sentiInstallationService = require('../../lib/installationService')
+let instService = null
 
-/**
- * Get all installations
- */
-router.get('/v3/installations', (req, res) => {
 
-	res.status(200).json(true);
+
+router.all('/v3/installations*', async (req, res, next) => {
+	console.log('We passed this')
+	instService = new sentiInstallationService(req.headers.authorization)
+	console.log(req.headers.authorization)
+	next()
 })
 
 /**
@@ -14,10 +17,18 @@ router.get('/v3/installations', (req, res) => {
  * @param {UUIDv4} req.params.orgUUID
  */
 
-router.get('/v3/installations/:orguuid', (req, res) => {
+router.get('/v3/installations/:orguuid', async (req, res) => {
 	let orgUUID = req.params.orguuid
-
-	return res.status(200);
+	if (orgUUID) {
+		let installations = await instService.getInstallationsByOrgUUID(orgUUID)
+		if (installations) {
+			return res.status(200).json(installations)
+		}
+		else {
+			return res.status(500);
+		}
+	}
+	return res.status(500);
 });
 
 module.exports = router
