@@ -1,7 +1,7 @@
 CREATE DATABASE `waterworksdev` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_danish_ci */;
 
 
-CREATE TABLE `installation` (
+CREATE TABLE waterworksdev.`installation` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `uuid` varchar(36) COLLATE utf8mb4_danish_ci NOT NULL,
   `address` varchar(255) COLLATE utf8mb4_danish_ci DEFAULT NULL,
@@ -20,7 +20,7 @@ CREATE INDEX inst_uuid USING BTREE on waterworksdev.installation(`uuid`);
 
 -- waterworksdev.instDevice definition
 
-CREATE TABLE `instDevice` (
+CREATE TABLE waterworksdev.`instDevice` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `uuid` varchar(36) COLLATE utf8mb4_danish_ci NOT NULL,
   `startDate` datetime NOT NULL,
@@ -37,7 +37,7 @@ CREATE INDEX instDevice_uuid USING BTREE on waterworksdev.instDevice(`uuid`);
 
 -- waterworksdev.instUser definition
 
-CREATE TABLE `instUser` (
+CREATE TABLE waterworksdev.`instUser` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `uuid` varchar(36) COLLATE utf8mb4_danish_ci NOT NULL,
   `startDate` datetime NOT NULL,
