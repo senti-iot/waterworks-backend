@@ -14,8 +14,6 @@ CREATE TABLE waterworksdev.`installation` (
   KEY `inst_uuid` (`uuid`) USING BTREE
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_danish_ci;
 
-CREATE INDEX inst_uuid USING BTREE on waterworksdev.installation(`uuid`);
-
 
 
 -- waterworksdev.instDevice definition
@@ -33,8 +31,6 @@ CREATE TABLE waterworksdev.`instDevice` (
   CONSTRAINT `instDevice_installation_fk` FOREIGN KEY (`instUUID`) REFERENCES `installation` (`uuid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_danish_ci;
 
-CREATE INDEX instDevice_uuid USING BTREE on waterworksdev.instDevice(`uuid`);
-
 -- waterworksdev.instUser definition
 
 CREATE TABLE waterworksdev.`instUser` (
@@ -51,5 +47,3 @@ CREATE TABLE waterworksdev.`instUser` (
   KEY `instUser_uuid` (`uuid`) USING BTREE,
   CONSTRAINT `instUser_installation_fk` FOREIGN KEY (`instUUID`) REFERENCES `installation` (`uuid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_danish_ci;
-
-CREATE INDEX instUser_uuid USING BTREE on waterworksdev.instUser(`uuid`);
