@@ -11,9 +11,9 @@ describe('Installation CRUD',  () => {
 			.send({
 				address: "Schubertstr",
 				orgUUID: "d866eb04-90d4-436c-9cc8-bd593258c54f", //Webhouse ApS UUID
-				state: 2,
-				adults: 1,
-				children: 3
+				state: 0,
+				operation: 0,
+				moving: 0
 			})
 		expect(res.statusCode).toEqual(200)
 		expect(res.body.address).toEqual('Schubertstr')
@@ -36,9 +36,9 @@ describe('Installation CRUD',  () => {
 			uuid: instUUID,
 			address: "FakeAddress",
 			orgUUID: "d866eb04-90d4-436c-9cc8-bd593258c54f", //Webhouse ApS UUID
-			state: 0,
-			adults: 2,
-			children: 0
+			state: 1,
+			operation: 1,
+			moving: 1
 		}
 		const res = await agent
 			.post(`/v3/installation`)
@@ -46,9 +46,9 @@ describe('Installation CRUD',  () => {
 			.type('json').send(editInst)
 		expect(res.statusCode).toEqual(200)
 		expect(res.body.address).toEqual('FakeAddress')
-		expect(res.body.state).toEqual(0)
-		expect(res.body.adults).toEqual(2)
-		expect(res.body.children).toEqual(0)
+		expect(res.body.state).toEqual(1)
+		expect(res.body.operation).toEqual(1)
+		expect(res.body.moving).toEqual(1)
 		expect(res.body.uuid).toEqual(instUUID)
 	})
 	it('should delete', async () => {

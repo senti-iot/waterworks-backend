@@ -14,9 +14,9 @@ describe('Installation User CRUD', () => {
 			.send({
 				address: "Schubertstr",
 				orgUUID: "d866eb04-90d4-436c-9cc8-bd593258c54f", //Webhouse ApS UUID
-				state: 2,
-				adults: 1,
-				children: 3
+				state: 1,
+				operation: 1,
+				moving: 0
 			})
 		expect(res.statusCode).toEqual(200)
 		expect(res.body.address).toEqual('Schubertstr')
