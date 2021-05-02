@@ -5,7 +5,7 @@ let instService = null
 
 
 
-router.all('/v3/installation', async (req, res, next) => {
+router.all('/v3/installation*', async (req, res, next) => {
 	instService = new sentiInstallationService(req.headers.authorization)
 	console.log(req.headers.authorization)
 	next()
@@ -16,13 +16,17 @@ router.all('/v3/installation', async (req, res, next) => {
  */
 router.get('/v3/installation/:uuid', async (req, res) => {
 	let installationUUID = req.params.uuid
-	let inst = await instService.getInstallationByUUID(installationUUID)
-	// console.log(inst)
-	if (inst)
+	if (instService) {
+
+		let inst = await instService.getInstallationByUUID(installationUUID)
+		// console.log(inst)
+		if (inst)
 		res.status(200).json(inst)
-	else {
-		res.status(404).json(null)
+		else {
+			res.status(404).json(null)
+		}
 	}
+	return res.status(500)
 })
 
 /**
