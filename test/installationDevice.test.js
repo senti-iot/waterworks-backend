@@ -50,41 +50,28 @@ describe('Installation Device CRUD', () => {
 			})
 		expect(res.statusCode).toEqual(200)
 		expect(res.body.instUUID).toEqual(instUUID)
+		instDevice1 = res.body
 		console.log(res.body)
 
 	})
-	// it('should get', async () => {
-	// 	expect(instUUID).not.toBeNull()
-	// 	const res = await request(app)
-	// 		.get(`/v3/installation/${instUUID}`)
-	// 		.set('Authorization', `Bearer ${bearerToken}`)
-	// 		.send()
-	// 	expect(res.statusCode).toEqual(200)
-	// 	expect(res.body.address).toEqual('Schubertstr')
-	// 	expect(res.body.uuid).toEqual(instUUID)
-	// 	// expect(res.body).toHaveProperty('get')
-	// })
-	// it('should edit', async () => {
-	// 	expect(instUUID).not.toBeNull()
-	// 	let editInst = {
-	// 		uuid: instUUID,
-	// 		address: "FakeAddress",
-	// 		orgUUID: "d866eb04-90d4-436c-9cc8-bd593258c54f", //Webhouse ApS UUID
-	// 		state: 0,
-	// 		adults: 2,
-	// 		children: 0
-	// 	}
-	// 	const res = await request(app)
-	// 		.post(`/v3/installation`)
-	// 		.set('Authorization', `Bearer ${bearerToken}`)
-	// 		.type('json').send(editInst)
-	// 	expect(res.statusCode).toEqual(200)
-	// 	expect(res.body.address).toEqual('FakeAddress')
-	// 	expect(res.body.state).toEqual(0)
-	// 	expect(res.body.adults).toEqual(2)
-	// 	expect(res.body.children).toEqual(0)
-	// 	expect(res.body.uuid).toEqual(instUUID)
-	// })
+	it('should edit', async () => {
+		expect(instUUID).not.toBeNull()
+		console.log('instDevice',instDevice1)
+		let editInst = {
+			startDate: "2021-01-01 00:00:00",
+			endDate: '2022-01-01 00:00:00',
+			deviceUUID: demoDeviceUUID,
+			instUUID: instUUID,
+			uuid: instDevice1.uuid
+		}
+		console.log("EditInst", editInst)
+		const res = await agent
+			.post(`/v3/installation/device`)
+			.set('Authorization', `Bearer ${bearerToken}`)
+			.type('json').send(editInst)
+		expect(res.statusCode).toEqual(200)
+
+	})
 	// it('should delete', async () => {
 	// 	expect(instUUID).not.toBeNull()
 	// 	const res = await request(app)

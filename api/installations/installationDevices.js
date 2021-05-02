@@ -8,7 +8,7 @@ let instDeviceService = new sentiInstDeviceService()
 /**
  * Set the auth bearer Token to serviceClass
  */
-router.all('/v3/installation', async (req, res, next) => {
+router.all('/v3/installation*', async (req, res, next) => {
 	instDeviceService = new sentiInstDeviceService(req.headers.authorization)
 	console.log(req.headers.authorization)
 	next()
@@ -29,10 +29,10 @@ router.get('/v3/installation/:uuid/devices', (req, res) => {
  * @param {UUIDv4} req.params.uuid
  * @param {UUIDv4} req.params.deviceuuid
  */
-router.get('/v3/installation/device/:uuid', (req, res) => {
+router.get('/v3/installation/device/:uuid', async (req, res) => {
 	// let installationUUID = req.params.uuid
 	let deviceUUID = req.params.deviceuuid
-	let instDevice = instDeviceService.getInstDeviceByUUID(deviceUUID)
+	let instDevice = await instDeviceService.getInstDeviceByUUID(deviceUUID)
 	if (instDevice) {
 		return res.status(200).json(instDevice)
 	}
@@ -45,28 +45,31 @@ router.get('/v3/installation/device/:uuid', (req, res) => {
  * @param {UUIDv4} req.params.deviceuuid
  * @param {Object} req.body - Device object + from/to
  */
-router.put('/v3/installation/device', (req, res) => {
+router.put('/v3/installation/device', async (req, res) => {
 	let instDevice = req.body
 	// let deviceUUID = req.params.deviceuuid
-	let fInstDevice = instDeviceService.createInstDevice(instDevice)
+	let fInstDevice = await instDeviceService.createInstDevice(instDevice)
+	console.log('fInstDevice', JSON.stringify(fInstDevice))
 	if (fInstDevice) {
-		return res.status(200).json(instDevice)
+
+		return res.status(200).json(fInstDevice)
 	}
 	res.status(500)
 })
 
 /**
- * Edit Installation
+ * Edit Installation Device
  * @param {UUIDv4} req.params.uuid
- * @param {UUIDv4} req.params.deviceuuid
  * @param {Object} req.body - Device object + from/to
  */
-router.post('v3/installation/device/:deviceuuid', (req, res) => {
-	let installation = req.body
-	let installationUUID = req.params.uuid
-	let deviceUUID = req.params.deviceuuid
-
-	res.status(200)
+router.post('/v3/installation/device', async (req, res) => {
+	let instDevice = req.body
+	console.log(instDevice)
+	let fInstDevice = await instDeviceService.editInstDevice(instDevice)
+	if (fInstDevice) {
+		return res.status(200).json(instDevice)
+	}
+	return res.status(500)
 })
 
 /**
