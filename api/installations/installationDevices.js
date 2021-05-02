@@ -67,7 +67,7 @@ router.post('/v3/installation/device', async (req, res) => {
 	console.log(instDevice)
 	let fInstDevice = await instDeviceService.editInstDevice(instDevice)
 	if (fInstDevice) {
-		return res.status(200).json(instDevice)
+		return res.status(200).json(fInstDevice)
 	}
 	return res.status(500)
 })
