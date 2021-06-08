@@ -72,4 +72,22 @@ router.delete('/v3/installation/:uuid', async (req, res) => {
 	}
 })
 
+/**
+ * Get installation, installation device and user by Senti userUUID
+ * @param {UUIDv4} req.params.uuid
+ */
+router.get('/v3/installation/senti/:uuid', async (req, res) => {
+	let sentiUUID = req.params.uuid
+	if (instService) {
+
+		let inst = await instService.getInstallationByUUID(installationUUID)
+		// console.log(inst)
+		if (inst)
+			res.status(200).json(inst)
+		else {
+			res.status(404).json(null)
+		}
+	}
+})
+
 module.exports = router
