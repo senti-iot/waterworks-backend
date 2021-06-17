@@ -8,7 +8,7 @@ const router = express.Router()
  * @param {Date} req.params.from
  * @param {Date} req.params.to
  */
-router.get('/v3/usage/byday/:uuid/:from/:to', (req, res) => {
+router.get('/v3/usage/byday/:uuid/:from/:to', async (req, res) => {
 	let UUID = req.params.uuid
 	let startDate = req.params.from
 	let endDate = req.params.to
