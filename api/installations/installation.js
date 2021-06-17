@@ -80,7 +80,7 @@ router.get('/v3/installation/senti/:uuid', async (req, res) => {
 	let sentiUUID = req.params.uuid
 	if (instService) {
 
-		let inst = await instService.getInstallationByUserUUID(installationUUID)
+		let inst = await instService.getInstallationByUserUUID(sentiUUID)
 		// console.log(inst)
 		if (inst)
 			res.status(200).json(inst)
