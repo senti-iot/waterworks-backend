@@ -31,4 +31,10 @@ router.get('/v3/installations/:orguuid', async (req, res) => {
 	return res.status(500);
 });
 
+router.get('/v3/installations/user/:useruuid', async (req, res) => {
+	let userUUID = req.params.useruuid
+	if (userUUID) {
+		let installations = await instService.getInstallationsByUserUUID(userU)
+	}
+})
 module.exports = router
