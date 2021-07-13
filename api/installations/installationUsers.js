@@ -8,7 +8,7 @@ let instUserService = new sentiInstUserService()
 /**
  * Set the auth bearer Token to serviceClass
  */
-router.all('/v3/installation', async (req, res, next) => {
+router.all('/v3/installation*', async (req, res, next) => {
 	instUserService = new sentiInstUserService(req.headers.authorization)
 	console.log(req.headers.authorization)
 	next()
@@ -56,16 +56,18 @@ router.put('/v3/installation/user', (req, res) => {
 })
 
 /**
- * Edit Installation
+ * Edit Installation user
  * @param {UUIDv4} req.params.uuid
  * @param {UUIDv4} req.params.useruuid
  * @param {Object} req.body - User object + from/to
  */
 router.post('v3/installation/user/:useruuid', (req, res) => {
-	let installation = req.body
-	let installationUUID = req.params.uuid
-	let userUUID = req.params.useruuid
+	let instUser = req.body
 
+	let fInstUser = instUserService.editInstUser(instUser)
+	if (fInstUser) {
+		return res.status(200).json(fInstUser)
+	}
 	res.status(200)
 })
 
