@@ -34,7 +34,7 @@ router.get('/v3/installations/:orguuid', async (req, res) => {
 router.get('/v3/installations/user/:useruuid', async (req, res) => {
 	let userUUID = req.params.useruuid
 	if (userUUID) {
-		let installations = await instService.getInstallationsByUserUUID(userUUID)
+		let installations = await instService.getInstallationByUserUUID(userUUID)
 		if (installations.length > 0) {
 			return res.status(200).json(installations)
 		}
