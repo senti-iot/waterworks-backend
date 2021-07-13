@@ -29,10 +29,10 @@ router.get('/v3/installation/:uuid/users', (req, res) => {
  * @param {UUIDv4} req.params.uuid
  * @param {UUIDv4} req.params.useruuid
  */
-router.get('/v3/installation/user/:uuid', (req, res) => {
+router.get('/v3/installation/user/:uuid', async (req, res) => {
 	// let installationUUID = req.params.uuid
-	let userUUID = req.params.useruuid
-	let instUser = instUserService.getInstUserByUUID(userUUID)
+	let userUUID = req.params.uuid
+	let instUser = await instUserService.getInstUserByUUID(userUUID)
 	if (instUser) {
 		return res.status(200).json(instUser)
 	}
@@ -45,10 +45,10 @@ router.get('/v3/installation/user/:uuid', (req, res) => {
  * @param {UUIDv4} req.params.useruuid
  * @param {Object} req.body - User object + from/to
  */
-router.put('/v3/installation/user', (req, res) => {
+router.put('/v3/installation/user', async (req, res) => {
 	let instUser = req.body
 	// let userUUID = req.params.useruuid
-	let fInstUser = instUserService.createInstUser(instUser)
+	let fInstUser = await instUserService.createInstUser(instUser)
 	if (fInstUser) {
 		return res.status(200).json(instUser)
 	}
