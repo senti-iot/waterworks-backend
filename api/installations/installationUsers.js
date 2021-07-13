@@ -61,7 +61,7 @@ router.put('/v3/installation/user', async (req, res) => {
  * @param {UUIDv4} req.params.useruuid
  * @param {Object} req.body - User object + from/to
  */
-router.post('v3/installation/user/', async (req, res) => {
+router.post('/v3/installation/user/', async (req, res) => {
 	let instUser = req.body
 
 	let fInstUser = await instUserService.editInstUser(instUser)
