@@ -10,7 +10,7 @@ let instUserService = new sentiInstUserService()
  */
 router.all('/v3/installation*', async (req, res, next) => {
 	instUserService = new sentiInstUserService(req.headers.authorization)
-	console.log(req.headers.authorization)
+	// console.log(req.headers.authorization)
 	next()
 })
 
