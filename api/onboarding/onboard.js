@@ -6,8 +6,9 @@ let oService = null
 
 
 router.all('/v3/onboard/*', async (req, res, next) => {
-	oService = new wbOnboardService(req.headers.authorization)
-	console.log(req.headers.authorization)
+	let auth = process.env.SENTI_TOKEN
+	oService = new wbOnboardService(auth)
+	console.log(auth)
 	next()
 })
 
@@ -17,10 +18,8 @@ router.all('/v3/onboard/*', async (req, res, next) => {
 
 router.post(`/v3/onboard/get-installation`, async (req, res) => {
 	let body = req.body
-	let auth = process.env.SENTI_TOKEN
-	let onboardService = new wbOnboardService(auth)
-	if (onboardService) {
-		let onboarding = await onboardService.getOnboarding(body)
+	if (oService) {
+		let onboarding = await oService.getOnboarding(body)
 		if (onboarding) {
 
 			return res.status(200).json(onboarding)
@@ -29,7 +28,6 @@ router.post(`/v3/onboard/get-installation`, async (req, res) => {
 			return res.status(404).json({ "Error": "Onboard not found" })
 		}
 	}
-
 })
 
 /**
@@ -68,24 +66,6 @@ router.post(`/v3/onboard/create-waterworks-user`, async (req, res) => {
 	else {
 		return res.status(500).json({ "Error": "oService is closed." })
 	}
-})
-/**
- * Get Installation
- * @param {UUIDv4} req.params.uuid
- */
-router.get('/v3/installation/:uuid', async (req, res) => {
-	let installationUUID = req.params.uuid
-	if (instService) {
-
-		let inst = await instService.getInstallationByUUID(installationUUID)
-		// console.log(inst)
-		if (inst)
-			res.status(200).json(inst)
-		else {
-			res.status(404).json(null)
-		}
-	}
-	return res.status(500)
 })
 
 

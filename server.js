@@ -68,6 +68,7 @@ app.use(express.urlencoded({ extended: true }))
 app.use(cors())
 
 //---API---------------------------------------
+app.use([onboard])
 app.use([auth])
 app.use([installation, installationDevices, installationUsers,  installations,
 	benchmark, reading, totalUsageByDay, totalUsageByHour, usageByDay, usageByHour
@@ -75,7 +76,6 @@ app.use([installation, installationDevices, installationUsers,  installations,
 app.use([test])
 app.use([onboardingInstallation, onboardingUser])
 app.use([settingsPrice, settingsGlobals])
-app.use([onboard])
 
 //---Start the express server---------------------------------------------------
 var allRoutes = require('./lib/routeLogger')
