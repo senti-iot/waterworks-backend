@@ -55,6 +55,8 @@ const totalUsageByDay = require('./api/dataSeries/totalUsageByDay')
 const totalUsageByHour = require('./api/dataSeries/totalUsageByHour')
 const usageByDay = require('./api/dataSeries/usageByDay')
 const usageByHour = require('./api/dataSeries/usageByHour')
+//--- Onboarding --
+const onboard = require('./api/onboarding/onboard')
 
 //--- App Port ---
 const port = process.env.NODE_PORT || 3029
@@ -73,6 +75,7 @@ app.use([installation, installationDevices, installationUsers,  installations,
 app.use([test])
 app.use([onboardingInstallation, onboardingUser])
 app.use([settingsPrice, settingsGlobals])
+app.use([onboard])
 
 //---Start the express server---------------------------------------------------
 var allRoutes = require('./lib/routeLogger')
