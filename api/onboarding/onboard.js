@@ -5,7 +5,7 @@ let oService = null
 
 
 
-router.all('/v3/onboard*', async (req, res, next) => {
+router.all('/v3/onboard/create*', async (req, res, next) => {
 	oService = new wbOnboardService(req.headers.authorization)
 	console.log(req.headers.authorization)
 	next()
@@ -17,8 +17,10 @@ router.all('/v3/onboard*', async (req, res, next) => {
 
 router.post(`/v3/onboard/get-installation`, async (req, res) => {
 	let body = req.body
-	if (oService) {
-		let onboarding = await oService.getOnboarding(body)
+	let auth = process.env.SENTI_TOKEN
+	let onboardService = new wbOnboardService(auth)
+	if (onboardService) {
+		let onboarding = await onboardService.getOnboarding(body)
 		if (onboarding) {
 
 			return res.status(200).json(onboarding)
