@@ -5,7 +5,7 @@ let oService = null
 
 
 
-router.all('/v3/onboard/create*', async (req, res, next) => {
+router.all('/v3/onboard/*', async (req, res, next) => {
 	oService = new wbOnboardService(req.headers.authorization)
 	console.log(req.headers.authorization)
 	next()
