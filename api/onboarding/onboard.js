@@ -12,6 +12,22 @@ router.all('/v3/onboard/*', async (req, res, next) => {
 	next()
 })
 
+
+router.post(`/v3/onboard/update-installation-address`, async (req, res) => {
+	let body = req.body
+	if (oService) {
+		let updInst = await oService.updateInstAddress(body)
+		if (updInst) {
+			return res.status(200).json({"Result": true})
+		}
+
+		return res.status(500).json({"Result": false})
+	}
+	else {
+		return res.status(500).json({ "Error": "oService is closed." })
+	}
+})
+
 /**
  * Get Onboarding info
  */
@@ -27,6 +43,9 @@ router.post(`/v3/onboard/get-installation`, async (req, res) => {
 		else {
 			return res.status(404).json({ "Error": "Onboard not found" })
 		}
+	}
+	else {
+		return res.status(500).json({ "Error": "oService is closed." })
 	}
 })
 
