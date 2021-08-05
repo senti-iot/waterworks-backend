@@ -38,6 +38,7 @@ const onboardingInstallation = require('./api/onboarding/installation')
 const onboardingUser = require('./api/onboarding/user')
 const settingsPrice = require('./api/settings/price')
 const settingsGlobals = require('./api/settings/globals')
+const events = require('./api/events/event')
 /**
  * V3
  */
@@ -69,6 +70,8 @@ app.use(cors())
 
 //---API---------------------------------------
 app.use([onboard])
+app.use([events])
+
 app.use([auth])
 app.use([installation, installationDevices, installationUsers,  installations,
 	benchmark, reading, totalUsageByDay, totalUsageByHour, usageByDay, usageByHour
