@@ -2,10 +2,13 @@ const express = require('express')
 const router = express.Router()
 
 const mysqlConn = require('../../mysql/mysql_handler')
-
+/**
+ * Create a new endpoint for org settings and call it appropriately
+ * @Andrei
+ */
 router.get('/settings/price/:organisationident', async (req, res) => {
-	let select = `SELECT watercost, watertax, statetax, sewage, vat, 
-						(watercost + watertax + statetax) as waterPrice, 
+	let select = `SELECT settings, watercost, watertax, statetax, sewage, vat,
+						(watercost + watertax + statetax) as waterPrice,
 						((watercost + watertax + statetax)*vat)/100 as waterVat,
 						(sewage*vat)/100 as sewageVat,
 						(watercost + watertax + statetax) + ((watercost + watertax + statetax)*vat)/100 as waterTotal,
