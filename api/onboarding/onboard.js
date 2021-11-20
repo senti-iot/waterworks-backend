@@ -99,7 +99,7 @@ router.post(`/v3/onboard/complete`, async (req, res) => {
 		//Create Senti User or check if it is already created
 		let user = await oService.findSentiUser(sUserBody)
 		if (!user) {
-			user = await oService.createSentiUser(userBody)
+			user = await oService.createSentiUser(sUserBody)
 		}
 
 		if (user) {
