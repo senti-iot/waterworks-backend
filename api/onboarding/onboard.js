@@ -112,13 +112,15 @@ router.post(`/v3/onboard/complete`, async (req, res) => {
 			if (wUser) {
 				//Update the installation
 				let inst = await oService.updateInstallation(instBody)
+				console.log('Installation update:', inst)
+				res.status(200).json({ "Result": true })
 			}
 			else {
 				res.status(500).json({ "Error": "Installation User failed to be created." })
 			}
 		}
 		else {
-			res.status(500).json({ "Error": "User failed to be created"})
+			res.status(500).json({ "Error": "User failed to be created" })
 		}
 	}
 })
