@@ -126,6 +126,7 @@ router.post(`/v3/onboard/complete`, async (req, res) => {
 		if (!user) {
 			user = await oService.createSentiUser(sUserBody)
 		}
+		console.log('CreateUser', user)
 
 		if (user) {
 			//If the user exists, create the Installation User
