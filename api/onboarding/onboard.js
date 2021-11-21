@@ -87,6 +87,30 @@ router.post(`/v3/onboard/create-waterworks-user`, async (req, res) => {
 	}
 })
 
+
+
+/**
+ * Activate installation after user confirmed his account
+ */
+
+router.get(`/v3/onboard/activate/:uuid`, async (req, res) => {
+	let uuid = req.params.uuid
+	if (oService) {
+		let result = await oService.activateInstallation(uuid)
+		console.log('Request to activate installation:', result)
+		if (result) {
+			res.status(200).json(result)
+		}
+		else {
+			res.status(500).json({ "Error": "Failed to activate installation" })
+		}
+	}
+	else {
+		res.status(500).json({ "Error": "oService is closed." })
+
+	}
+})
+
 /**
  *
  */
