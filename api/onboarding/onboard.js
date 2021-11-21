@@ -98,6 +98,7 @@ router.post(`/v3/onboard/complete`, async (req, res) => {
 	if (oService) {
 		//Create Senti User or check if it is already created
 		let user = await oService.findSentiUser(sUserBody)
+		console.log('Request findUser:', user)
 		if (!user) {
 			user = await oService.createSentiUser(sUserBody)
 		}
@@ -105,7 +106,9 @@ router.post(`/v3/onboard/complete`, async (req, res) => {
 		if (user) {
 			//If the user exists, create the Installation User
 			wUserBody.userUUID = user.uuid
+			console.log('Request createWaterworksUser:', wUserBody)
 			let wUser = await oService.createWaterworksUser(wUserBody)
+			console.log('Request createWaterworksUser result:', wUser)
 			if (wUser) {
 				//Update the installation
 				let inst = await oService.updateInstallation(instBody)
