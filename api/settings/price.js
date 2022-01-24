@@ -1,7 +1,15 @@
 const express = require('express')
 const router = express.Router()
-
 const mysqlConn = require('../../mysql/mysql_handler')
+
+const swOrgSettings = require('../../lib/orgSettingsService')
+
+
+router.all('/org/settings/*', async (req, res) => {
+	swOrgService = new swOrgSettings()
+	next()
+})
+
 /**
  * Create a new endpoint for org settings and call it appropriately
  * @Andrei
@@ -27,5 +35,20 @@ router.get('/settings/price/:organisationident', async (req, res) => {
 	}
 	res.status(200).json(rs[0][0]);
 });
+
+/**
+ * Update Price
+ */
+router.post('/org/settings', async (req, res) => {
+
+})
+
+/**
+ * Create Year Price
+ */
+
+router.put('/org/settings', async (req, res) => {
+
+})
 
 module.exports = router
