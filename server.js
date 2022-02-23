@@ -97,6 +97,7 @@ const startServer = () => {
 }
 
 startServer()
+console.log("Node Version: ", process.version)
 
 const dataBrokerAPI = createAPI({
 	baseURL: process.env.SENTIDATABROKER,
