@@ -4,7 +4,7 @@ services:
 before_install:
   - mysql -u root --password="" < test/travis.sql
 node_js:
-  - stable
+  - 16.10.0
 addons:
   ssh_known_hosts:
     - rey.webhouse.net
