@@ -68,7 +68,8 @@ router.post('/v3/installation/user/', async (req, res) => {
 	if (fInstUser) {
 		return res.status(200).json(fInstUser)
 	}
-	res.status(200)
+	else
+		return res.status(500).json({ "Error": "Error" })
 })
 
 /**
