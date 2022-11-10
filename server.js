@@ -59,6 +59,12 @@ const usageByHour = require('./api/dataSeries/usageByHour')
 //--- Onboarding --
 const onboard = require('./api/onboarding/onboard')
 
+/**
+ * V4
+ */
+const installationsV4 = require('./api/v4/installations')
+const dataV4 = require('./api/v4/data')
+
 //--- App Port ---
 const port = process.env.NODE_PORT || 3029
 
@@ -79,6 +85,9 @@ app.use([installation, installationDevices, installationUsers,  installations,
 app.use([test])
 app.use([onboardingInstallation, onboardingUser])
 app.use([settingsPrice, settingsGlobals])
+
+// V4
+app.use([installationsV4, dataV4])
 
 //---Start the express server---------------------------------------------------
 var allRoutes = require('./lib/routeLogger')
@@ -111,32 +120,32 @@ const dataBrokerAPI = createAPI({
 module.exports = app
 //Move this to a separate Service Mikkel...
 
-async function submitAlarmThreshold() {
-	let select = `SELECT i.orgUUID as uuid FROM installationSettings i`
-	let rs = await mysqlConn.query(select, [])
-	if (rs[0].length === 0) {
-		return
-	}
-	if (authClient.getStoredToken() === false) {
-		let login = await authClient.login(process.env.SENTIUSER, process.env.SENTIPASS)
-		authClient.setStoredToken(login.token)
-	}
-	if (await authClient.getTokenLease(authClient.getStoredToken()) === false) {
-		authClient.setStoredToken((await authClient.login(process.env.SENTIUSER, process.env.SENTIPASS)).token)
-	}
-	dataBrokerAPI.setHeader('Authorization', 'Bearer ' + authClient.getStoredToken())
-	dataBrokerAPI.setHeader('wlhost', process.env.WLHOST)
+// async function submitAlarmThreshold() {
+// 	let select = `SELECT i.orgUUID as uuid FROM installationSettings i`
+// 	let rs = await mysqlConn.query(select, [])
+// 	if (rs[0].length === 0) {
+// 		return
+// 	}
+// 	if (authClient.getStoredToken() === false) {
+// 		let login = await authClient.login(process.env.SENTIUSER, process.env.SENTIPASS)
+// 		authClient.setStoredToken(login.token)
+// 	}
+// 	if (await authClient.getTokenLease(authClient.getStoredToken()) === false) {
+// 		authClient.setStoredToken((await authClient.login(process.env.SENTIUSER, process.env.SENTIPASS)).token)
+// 	}
+// 	dataBrokerAPI.setHeader('Authorization', 'Bearer ' + authClient.getStoredToken())
+// 	dataBrokerAPI.setHeader('wlhost', process.env.WLHOST)
 
-	rs[0].map(async org => {
-		let deviceGet = await dataBrokerAPI.get(`/v2/waterworks/alarm/threshold/${org.uuid}`)
-		console.log(org.uuid, deviceGet.ok)
-	})
-}
+// 	rs[0].map(async org => {
+// 		let deviceGet = await dataBrokerAPI.get(`/v2/waterworks/alarm/threshold/${org.uuid}`)
+// 		console.log(org.uuid, deviceGet.ok)
+// 	})
+// }
 
-const job = new CronJob('*/60 * * * *', async function() {
-	const d = new Date()
-	console.log(d)
-	submitAlarmThreshold()
-})
-job.start()
-submitAlarmThreshold()
+// const job = new CronJob('*/60 * * * *', async function() {
+// 	const d = new Date()
+// 	console.log(d)
+// 	submitAlarmThreshold()
+// })
+// job.start()
+// submitAlarmThreshold()
