@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router()
 
-const dataBrokerAPI = require('../../lib/api/databroker')
+const dataBrokerAPI = require('../../lib/api/dataBroker')
 
 router.get('/v4/device/:uuid', async (req, res) => {
 	dataBrokerAPI.setHeader('Authorization', "Bearer " + req.lease.token)
