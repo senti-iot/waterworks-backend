@@ -4,22 +4,8 @@ const moment = require('moment')
 
 const databrokerAPI = require('../../lib/api/dataBroker')
 const coreAPI = require('../../lib/api/core')
+const wbAPI = require('../../lib/api/wb')
 const wrcAPI = require('../../lib/api/wrc')
-
-router.post('/v4/data/:field/:from/:to', async (req, res) => {
-	databrokerAPI.setHeader('Authorization', "Bearer " + process.env.SENTI_TOKEN)
-
-	let startDate = moment(from).format('YYYY-MM-DD HH:mm:ss')
-	let endDate = moment(to).format('YYYY-MM-DD HH:mm:ss')
-
-	const response = await databrokerAPI.post(`/v2/waterworks/data/${startDate}/${endDate}/${req.params.to}`, req.body)
-
-	if (!response) {
-		return res.status(404)
-	} else {
-		return res.status(200).json(response.data)
-	}
-})
 
 router.get('/v4/data/usagebyhour/:from/:to', async (req, res) => {
 	coreAPI.setHeader('Authorization', "Bearer " + process.env.SENTI_TOKEN)
@@ -52,12 +38,12 @@ router.post('/v4/data/usagebyhour/:from/:to', async (req, res) => {
 })
 
 router.get('/v4/data/usagebyday/:from/:to', async (req, res) => {
-	coreAPI.setHeader('Authorization', "Bearer " + process.env.SENTI_TOKEN)
+	databrokerAPI.setHeader('Authorization', "Bearer " + process.env.SENTI_TOKEN)
 
 	let startDate = moment(req.params.from).format('YYYY-MM-DD HH:mm:ss')
 	let endDate = moment(req.params.to).format('YYYY-MM-DD HH:mm:ss')
 
-	const response = await coreAPI.get(`/v2/waterworks/data/usagebyday/${startDate}/${endDate}`)
+	const response = await databrokerAPI.get(`/v2/waterworks/data/usagebyday/${startDate}/${endDate}`)
 
 	if (!response) {
 		return res.status(404)
@@ -67,12 +53,14 @@ router.get('/v4/data/usagebyday/:from/:to', async (req, res) => {
 })
 
 router.post('/v4/data/usagebyday/:from/:to', async (req, res) => {
-	coreAPI.setHeader('Authorization', "Bearer " + process.env.SENTI_TOKEN)
+	wbAPI.setHeader('Authorization', "Bearer " + process.env.SENTI_TOKEN)
 
 	let startDate = moment(req.params.from).format('YYYY-MM-DD HH:mm:ss')
 	let endDate = moment(req.params.to).format('YYYY-MM-DD HH:mm:ss')
 
-	const response = await coreAPI.post(`/v3/usage/byday/${startDate}/${endDate}`, req.body)
+	const uuids = req.body
+
+	const response = await wbAPI.get(`/v3/usage/byday/${uuids[0]}/${startDate}/${endDate}`)
 
 	if (!response) {
 		return res.status(404)
@@ -94,7 +82,7 @@ router.post('/v4/data/cachedreading', async (req, res) => {
 	}
 })
 
-router.get('/v4/data/benchmarkperhour', async (req, res) => {
+router.get('/v4/data/benchmarkbyhour', async (req, res) => {
 	databrokerAPI.setHeader('Authorization', "Bearer " + process.env.SENTI_TOKEN)
 
 	const startDate = moment(req.params.from).format('YYYY-MM-DD HH:mm:ss')
@@ -109,13 +97,13 @@ router.get('/v4/data/benchmarkperhour', async (req, res) => {
 	}
 })
 
-router.get('/v4/data/benchmarkperday', async (req, res) => {
+router.get('/v4/data/benchmarkbyday/:orgUUID/:from/:to', async (req, res) => {
 	databrokerAPI.setHeader('Authorization', "Bearer " + process.env.SENTI_TOKEN)
 
 	const startDate = moment(req.params.from).format('YYYY-MM-DD')
 	const endDate = moment(req.params.to).format('YYYY-MM-DD')
 
-	const response = await databrokerAPI.get(`/v2/waterworks/data/benchmark/${orgUuid}/${startDate}/${endDate}`)
+	const response = await databrokerAPI.get(`/v2/waterworks/data/benchmark/${req.params.orgUuid}/${startDate}/${endDate}`)
 
 	if (!response) {
 		return res.status(404)
@@ -249,7 +237,6 @@ router.post('/v4/data/cachedflowmax', async (req, res) => {
 			},
 			uuids: uuids
 		})
-		console.log(response.data)
 
 		if (response.ok) {
 			return res.status(200).json(response.data)
@@ -258,6 +245,21 @@ router.post('/v4/data/cachedflowmax', async (req, res) => {
 		}
 	} else {
 		return res.status(404)
+	}
+})
+
+router.post('/v4/data/:field/:from/:to', async (req, res) => {
+	databrokerAPI.setHeader('Authorization', "Bearer " + process.env.SENTI_TOKEN)
+
+	let startDate = moment(req.params.from).format('YYYY-MM-DD HH:mm:ss')
+	let endDate = moment(req.params.to).format('YYYY-MM-DD HH:mm:ss')
+
+	const response = await databrokerAPI.post(`/v2/waterworks/data/${req.params.field}/${startDate}/${endDate}`, req.body)
+
+	if (!response) {
+		return res.status(404)
+	} else {
+		return res.status(200).json(response.data)
 	}
 })
 
