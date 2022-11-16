@@ -53,14 +53,13 @@ router.get('/v4/data/usagebyday/:from/:to', async (req, res) => {
 })
 
 router.post('/v4/data/usagebyday/:from/:to', async (req, res) => {
-	wbAPI.setHeader('Authorization', "Bearer " + process.env.SENTI_TOKEN)
+	databrokerAPI.setHeader('Authorization', "Bearer " + process.env.SENTI_TOKEN)
 
-	let startDate = moment(req.params.from).format('YYYY-MM-DD HH:mm:ss')
-	let endDate = moment(req.params.to).format('YYYY-MM-DD HH:mm:ss')
-
+	const startDate = moment(req.params.from).format('YYYY-MM-DD HH:mm:ss')
+	const endDate = moment(req.params.to).format('YYYY-MM-DD HH:mm:ss')
 	const uuids = req.body
 
-	const response = await wbAPI.get(`/v3/usage/byday/${uuids[0]}/${startDate}/${endDate}`)
+	let response = await databrokerAPI.post(`/v2/waterworks/data/usagebyday/${startDate}/${endDate}`, [uuids[0]])
 
 	if (!response) {
 		return res.status(404)
