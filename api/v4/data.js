@@ -70,8 +70,9 @@ router.post('/v4/data/usagebyday/:from/:to', async (req, res) => {
 
 router.post('/v4/data/cachedreading', async (req, res) => {
 	let data = req.body
-	data.from = moment(data.from).format('YYYY-MM-DD')
-	data.to = moment(data.to).format('YYYY-MM-DD')
+	data.period = {};
+	data.period.from = moment(data.from).format('YYYY-MM-DD')
+	data.period.to = moment(data.to).format('YYYY-MM-DD')
 
 	if (data.uuids) {
 		const response = await wrcAPI.post(`/reading`, data)
