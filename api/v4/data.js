@@ -4,7 +4,6 @@ const moment = require('moment')
 
 const databrokerAPI = require('../../lib/api/dataBroker')
 const coreAPI = require('../../lib/api/core')
-const wbAPI = require('../../lib/api/wb')
 const wrcAPI = require('../../lib/api/wrc')
 
 router.get('/v4/data/usagebyhour/:from/:to', async (req, res) => {
@@ -82,13 +81,13 @@ router.post('/v4/data/cachedreading', async (req, res) => {
 	}
 })
 
-router.get('/v4/data/benchmarkbyhour', async (req, res) => {
+router.get('/v4/data/benchmarkbyhour/:orgUUID/:from/:to', async (req, res) => {
 	databrokerAPI.setHeader('Authorization', "Bearer " + process.env.SENTI_TOKEN)
 
 	const startDate = moment(req.params.from).format('YYYY-MM-DD HH:mm:ss')
 	const endDate = moment(req.params.to).format('YYYY-MM-DD HH:mm:ss')
 
-	let response = await databrokerAPI.get(`/v2/waterworks/data/benchmark/byhour/${orgUuid}/${startDate}/${endDate}`)
+	let response = await databrokerAPI.get(`/v2/waterworks/data/benchmark/byhour/${req.params.orgUUID}/${startDate}/${endDate}`)
 
 	if (!response) {
 		return res.status(404)
@@ -103,7 +102,7 @@ router.get('/v4/data/benchmarkbyday/:orgUUID/:from/:to', async (req, res) => {
 	const startDate = moment(req.params.from).format('YYYY-MM-DD')
 	const endDate = moment(req.params.to).format('YYYY-MM-DD')
 
-	const response = await databrokerAPI.get(`/v2/waterworks/data/benchmark/${req.params.orgUuid}/${startDate}/${endDate}`)
+	const response = await databrokerAPI.get(`/v2/waterworks/data/benchmark/${req.params.orgUUID}/${startDate}/${endDate}`)
 
 	if (!response) {
 		return res.status(404)
