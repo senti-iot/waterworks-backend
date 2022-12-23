@@ -159,7 +159,39 @@ router.post('/v4/data/cachedtotalvolume', async (req, res) => {
 	if (!response.ok) {
 		return res.status(404)
 	} else {
-		return res.status(200).json(response.data)
+		let data = response.data;
+
+		//smooth out missing days
+		const dates = data.map(item => new Date(item.datetime));
+
+		for (let i = 0; i < dates.length - 1; i++) {
+			const currentDate = dates[i];
+			const nextDate = dates[i + 1];
+			const diffInDays = moment(nextDate).diff(currentDate, 'days');
+
+			if (diffInDays > 1) {
+				const missingDays = diffInDays - 1;
+				const value = data[i + 1].value / missingDays;
+				const totalFlowPerDay = data[i + 1].totalFlowPerDay / missingDays
+				const totalFlowPerSecond = data[i + 1].totalFlowPerSecond / missingDays;
+
+				for (let j = 0; j < missingDays; j++) {
+					const missingDay = moment(currentDate).utc().add(j + 1, 'days');
+					dates.splice(i + 1 + j, 0, missingDay);
+					data.splice(i + 1 + j, 0, { value, totalFlowPerDay, totalFlowPerSecond, datetime: moment(missingDay), calculated: true });
+
+				}
+
+				//also add calculated to the last day
+				const nextDateObj = data.find(d => moment(d.datetime).isSame(moment(nextDate)));
+				const index = data.indexOf(nextDateObj);
+				data.splice(index, 1, { value, totalFlowPerDay, totalFlowPerSecond, datetime: moment(nextDate), calculated: true });
+			}
+		}
+
+		// console.log(data);
+
+		return res.status(200).json(data)
 	}
 })
 
