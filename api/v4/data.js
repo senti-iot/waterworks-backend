@@ -163,22 +163,23 @@ router.post('/v4/data/cachedtotalvolume', async (req, res) => {
 
 		//smooth out missing days
 		const dates = data.map(item => new Date(item.datetime));
+		console.log(dates);
 
 		for (let i = 0; i < dates.length - 1; i++) {
 			const currentDate = dates[i];
 			const nextDate = dates[i + 1];
-			const diffInDays = moment(nextDate).diff(currentDate, 'days');
+			const diffInDays = moment(nextDate).diff(currentDate, 'days') - 1;
 
 			if (diffInDays > 1) {
-				const value = data[i + 1].value / diffInDays;
-				const totalFlowPerDay = data[i + 1].totalFlowPerDay / diffInDays;
-				const totalFlowPerSecond = data[i + 1].totalFlowPerSecond / diffInDays;
+				const value = data[i + 1].totalFlowPerDay;
+				const totalFlowPerDay = data[i + 1].totalFlowPerDay;
+				const totalFlowPerSecond = data[i + 1].totalFlowPerSecond;
 
 				for (let j = 0; j < diffInDays; j++) {
 					const missingDay = moment(currentDate).utc().add(j + 1, 'days');
+					console.log(missingDay);
 					dates.splice(i + 1 + j, 0, missingDay);
 					data.splice(i + 1 + j, 0, { value, totalFlowPerDay, totalFlowPerSecond, datetime: moment(missingDay), calculated: true });
-
 				}
 
 				//also add calculated to the last day
