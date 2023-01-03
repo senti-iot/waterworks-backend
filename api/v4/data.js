@@ -6,6 +6,40 @@ const databrokerAPI = require('../../lib/api/dataBroker')
 const coreAPI = require('../../lib/api/core')
 const wrcAPI = require('../../lib/api/wrc')
 
+const smoothMissingDays = (data) => {
+	let newData = [];
+
+	//push first
+	newData.push({ ...data[0], calculated: false });
+
+	for (let i = 0; i < data.length - 1; i++) {
+		let d = data[i];
+		let curDate = moment(d.datetime);
+		let nextDate = moment(data[i + 1].datetime);
+		let dayDiff = nextDate.diff(curDate, 'days');
+
+		if (dayDiff > 1) {
+			const value = data[i + 1].value / dayDiff;
+			const totalFlowPerDay = data[i + 1].totalFlowPerDay;
+			const totalFlowPerSecond = data[i + 1].totalFlowPerSecond;
+
+			for (let j = 1; j <= dayDiff; j++) {
+				newData.push({ value: value, totalFlowPerDay: totalFlowPerDay, totalFlowPerSecond: totalFlowPerSecond, datetime: moment(curDate).add(j, 'days'), calculated: true })
+			}
+		} else {
+			newData.push({ ...data[i + 1], calculated: false });
+		}
+	}
+
+	//push last if not calculated in the loop
+	const foundLast = newData.find(d => moment(newData[newData.length - 1].datetime).isSame(moment(data[data.length - 1].datetime), 'day'));
+	if (foundLast === undefined) {
+		newData.push({ ...data[data.length - 1], calculated: false });
+	}
+
+	return newData;
+}
+
 router.get('/v4/data/usagebyhour/:from/:to', async (req, res) => {
 	coreAPI.setHeader('Authorization', "Bearer " + process.env.SENTI_TOKEN)
 
@@ -63,7 +97,10 @@ router.post('/v4/data/usagebyday/:from/:to', async (req, res) => {
 	if (!response) {
 		return res.status(404)
 	} else {
-		return res.status(200).json(response.data)
+		//smooth out missing days
+		const newData = smoothMissingDays(response.data);
+
+		return res.status(200).json(newData)
 	}
 })
 
@@ -163,35 +200,7 @@ router.post('/v4/data/cachedtotalvolume', async (req, res) => {
 		// console.log(data);
 
 		//smooth out missing days
-		let newData = [];
-
-		//push first
-		newData.push({ ...data[0], calculated: false });
-
-		for (let i = 0; i < data.length - 1; i++) {
-			let d = data[i];
-			let curDate = moment(d.datetime);
-			let nextDate = moment(data[i + 1].datetime);
-			let dayDiff = nextDate.diff(curDate, 'days');
-
-			if (dayDiff > 1) {
-				const value = data[i + 1].value / dayDiff;
-				const totalFlowPerDay = data[i + 1].totalFlowPerDay;
-				const totalFlowPerSecond = data[i + 1].totalFlowPerSecond;
-
-				for (let j = 1; j <= dayDiff; j++) {
-					newData.push({ value: value, totalFlowPerDay: totalFlowPerDay, totalFlowPerSecond: totalFlowPerSecond, datetime: moment(curDate).add(j, 'days'), calculated: true })
-				}
-			} else {
-				newData.push({ ...data[i + 1], calculated: false });
-			}
-		}
-
-		//push last if not calculated in the loop
-		const foundLast = newData.find(d => moment(newData[newData.length - 1].datetime).isSame(moment(data[data.length - 1].datetime), 'day'));
-		if (foundLast === undefined) {
-			newData.push({ ...data[data.length - 1], calculated: false });
-		}
+		const newData = smoothMissingDays(data);
 
 		return res.status(200).json(newData)
 	}
