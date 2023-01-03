@@ -160,38 +160,40 @@ router.post('/v4/data/cachedtotalvolume', async (req, res) => {
 		return res.status(404)
 	} else {
 		let data = response.data;
+		// console.log(data);
 
 		//smooth out missing days
-		const dates = data.map(item => new Date(item.datetime));
-		console.log(dates);
+		let newData = [];
 
-		for (let i = 0; i < dates.length - 1; i++) {
-			const currentDate = dates[i];
-			const nextDate = dates[i + 1];
-			const diffInDays = moment(nextDate).diff(currentDate, 'days') - 1;
+		//push first
+		newData.push({ ...data[0], calculated: false });
 
-			if (diffInDays > 1) {
-				const value = data[i + 1].totalFlowPerDay;
+		for (let i = 0; i < data.length - 1; i++) {
+			let d = data[i];
+			let curDate = moment(d.datetime);
+			let nextDate = moment(data[i + 1].datetime);
+			let dayDiff = nextDate.diff(curDate, 'days');
+
+			if (dayDiff > 1) {
+				const value = data[i + 1].value / dayDiff;
 				const totalFlowPerDay = data[i + 1].totalFlowPerDay;
 				const totalFlowPerSecond = data[i + 1].totalFlowPerSecond;
 
-				for (let j = 0; j < diffInDays; j++) {
-					const missingDay = moment(currentDate).utc().add(j + 1, 'days');
-					console.log(missingDay);
-					dates.splice(i + 1 + j, 0, missingDay);
-					data.splice(i + 1 + j, 0, { value, totalFlowPerDay, totalFlowPerSecond, datetime: moment(missingDay), calculated: true });
+				for (let j = 1; j <= dayDiff; j++) {
+					newData.push({ value: value, totalFlowPerDay: totalFlowPerDay, totalFlowPerSecond: totalFlowPerSecond, datetime: moment(curDate).add(j, 'days'), calculated: true })
 				}
-
-				//also add calculated to the last day
-				const nextDateObj = data.find(d => moment(d.datetime).isSame(moment(nextDate)));
-				const index = data.indexOf(nextDateObj);
-				data.splice(index, 1, { value, totalFlowPerDay, totalFlowPerSecond, datetime: moment(nextDate), calculated: true });
+			} else {
+				newData.push({ ...data[i + 1], calculated: false });
 			}
 		}
 
-		// console.log(data);
+		//push last if not calculated in the loop
+		const foundLast = newData.find(d => moment(newData[newData.length - 1].datetime).isSame(moment(data[data.length - 1].datetime), 'day'));
+		if (foundLast === undefined) {
+			newData.push({ ...data[data.length - 1], calculated: false });
+		}
 
-		return res.status(200).json(data)
+		return res.status(200).json(newData)
 	}
 })
 
