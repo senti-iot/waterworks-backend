@@ -32,9 +32,11 @@ const smoothMissingDays = (data) => {
 	}
 
 	//push last if not calculated in the loop
-	const foundLast = newData.find(d => moment(newData[newData.length - 1].datetime).isSame(moment(data[data.length - 1].datetime), 'day'));
-	if (foundLast === undefined) {
-		newData.push({ ...data[data.length - 1], calculated: false });
+	if (newData.length > 1) {
+		const foundLast = newData.find(d => moment(newData[newData.length - 1].datetime).isSame(moment(data[data.length - 1].datetime), 'day'));
+		if (foundLast === undefined) {
+			newData.push({ ...data[data.length - 1], calculated: false });
+		}
 	}
 
 	return newData;
