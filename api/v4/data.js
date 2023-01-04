@@ -315,29 +315,19 @@ router.post('/v4/data/waterusageperson', async (req, res) => {
 
 	let response
 
-	if (data.uuids) {
-		response = await wrcAPI.post(`/usage`, {
-			orgId: data.orgUUID,
-			period: {
-				from: startDate,
-				to: endDate
-			},
-			uuids: data.uuids
-		})
-	} else {
-		response = await wrcAPI.post(`/usage`, {
-			orgId: data.orgUUID,
-			period: {
-				from: startDate,
-				to: endDate
-			}
-		})
-	}
+	response = await wrcAPI.post(`/usage`, {
+		orgId: data.orgUUID,
+		period: {
+			from: startDate,
+			to: endDate
+		},
+		uuids: data.uuids
+	})
 
 	if (!response.ok) {
 		return res.status(404)
 	} else {
-		const usagedata = response.data
+		const usagedata = smoothMissingDays(response.data)
 
 		let values = []
 		usagedata.forEach(d => {
@@ -346,9 +336,25 @@ router.post('/v4/data/waterusageperson', async (req, res) => {
 
 		const avgUsage = (values.reduce((a, b) => a + b, 0) / values.length)
 
-		const service = new installationService(req.lease.token)
+		const user = await coreAPI.get('/v2/auth/user').then(r => r.data)
 
-		let installations = await service.getInstallationsByOrgUUID(data.orgUUID)
+		let installations = []
+
+		if (!user) {
+			return res.status(401);
+		} else {
+			const isSuperUser = user.role.priority <= 10 ? true : false
+			const isSWAdmin = user.privileges.indexOf('waterworks.admin') > -1 ? true : false
+	
+			const service = new installationService(req.lease.token)
+	
+			if (isSuperUser || isSWAdmin) {
+				installations = await service.getInstallationsByUUIDs(data.uuids)
+				// installations = await service.getInstallationsByOrgUUID(user.org.uuid)
+			} else {
+				installations = await service.getInstallationsByUserUUID(user.uuid)
+			}
+		}
 
 		let people = 0;
 		installations.forEach(i => {
