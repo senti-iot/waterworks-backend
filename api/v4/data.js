@@ -5,6 +5,7 @@ const moment = require('moment')
 const databrokerAPI = require('../../lib/api/dataBroker')
 const coreAPI = require('../../lib/api/core')
 const wrcAPI = require('../../lib/api/wrc')
+const installationService = require('../../lib/installationService')
 
 const smoothMissingDays = (data) => {
 	let newData = [];
@@ -304,6 +305,65 @@ router.post('/v4/data/:field/:from/:to', async (req, res) => {
 		return res.status(404)
 	} else {
 		return res.status(200).json(response.data)
+	}
+})
+
+router.post('/v4/data/waterusageperson', async (req, res) => {
+	const data = req.body
+	const startDate = moment(data.from).format('YYYY-MM-DD')
+	const endDate = moment(data.to).format('YYYY-MM-DD')
+
+	let response
+
+	if (data.uuids) {
+		response = await wrcAPI.post(`/usage`, {
+			orgId: data.orgUUID,
+			period: {
+				from: startDate,
+				to: endDate
+			},
+			uuids: data.uuids
+		})
+	} else {
+		response = await wrcAPI.post(`/usage`, {
+			orgId: data.orgUUID,
+			period: {
+				from: startDate,
+				to: endDate
+			}
+		})
+	}
+
+	if (!response.ok) {
+		return res.status(404)
+	} else {
+		const usagedata = response.data
+
+		let values = []
+		usagedata.forEach(d => {
+			values.push(d.value)
+		})
+
+		const avgUsage = (values.reduce((a, b) => a + b, 0) / values.length)
+
+		const service = new installationService(req.lease.token)
+
+		let installations = await service.getInstallationsByOrgUUID(data.orgUUID)
+
+		let people = 0;
+		installations.forEach(i => {
+			if (!i.adults && !i.children) {
+				people += 2.5
+			} else if (i.adults && i.children) {
+				people += i.adults + i.children / 2
+			} else if (i.adults) {
+				people += i.adults
+			}
+		})
+
+		const result = avgUsage / people
+
+		return res.status(200).json({ value: result })
 	}
 })
 
