@@ -16,7 +16,7 @@ router.post('/v4/export/csv', async (req, res) => {
 
 router.post('/v4/export/data', async (req, res) => {
 	dataExportAPI.setHeader('Authorization', "Bearer " + req.lease.token)
-	const data = await dataExportAPI.get('/v2/waterworks/export', req.body).then(r => r.data)
+	const data = await dataExportAPI.post('/v2/waterworks/export', req.body).then(r => r.data)
 
 	if (!data) {
 		return res.status(404);

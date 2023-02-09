@@ -65,6 +65,7 @@ const onboard = require('./api/onboarding/onboard')
 const installationsV4 = require('./api/v4/installations')
 const dataV4 = require('./api/v4/data')
 const devicesV4 = require('./api/v4/devices')
+const exportV4 = require('./api/v4/export')
 
 //--- App Port ---
 const port = process.env.NODE_PORT || 3029
@@ -88,7 +89,7 @@ app.use([onboardingInstallation, onboardingUser])
 app.use([settingsPrice, settingsGlobals])
 
 // V4
-app.use([installationsV4, dataV4, devicesV4])
+app.use([installationsV4, dataV4, devicesV4, exportV4])
 
 //---Start the express server---------------------------------------------------
 var allRoutes = require('./lib/routeLogger')
